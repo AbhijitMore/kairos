@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List, Literal
 
+
 class AdultInstance(BaseModel):
     age: int = Field(..., json_schema_extra={"examples": [39]})
     workclass: str = Field(..., json_schema_extra={"examples": ["State-gov"]})
@@ -15,8 +16,10 @@ class AdultInstance(BaseModel):
     hours_per_week: int = Field(..., json_schema_extra={"examples": [40]})
     native_country: str = Field(..., json_schema_extra={"examples": ["United-States"]})
 
+
 class BatchInferenceRequest(BaseModel):
     instances: List[AdultInstance]
+
 
 class PredictionResponse(BaseModel):
     decision: Literal["ACCEPT", "REJECT", "ABSTAIN"]

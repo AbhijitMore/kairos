@@ -23,6 +23,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - MLFLOW_TRACKING_URI=http://mlflow:5050
+      - API_KEY=${API_KEY:-kairos_dev_key_2026}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s
@@ -43,6 +44,7 @@ services:
     environment:
       - PYTHONPATH=/app
       - API_URL=http://api:8000/predict
+      - API_KEY=${API_KEY:-kairos_dev_key_2026}
     command: ["python", "frontend/app.py"]
     depends_on:
       api:

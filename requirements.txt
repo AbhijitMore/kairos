@@ -15,6 +15,7 @@ pytest
 pytest-cov
 httpx
 pydantic-settings
+slowapi
 category_encoders
 seaborn
 flask

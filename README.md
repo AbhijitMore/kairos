@@ -3,6 +3,9 @@
 ## Strategic Decisioning via Statistical Calibration & Training-Serving Parity
 
 ![Build Status](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml/badge.svg)
+[![Documentation](https://img.shields.io/badge/docs-Onboarding-brightgreen.svg)](docs/ONBOARDING.md)
+[![Architecture](https://img.shields.io/badge/architecture-System%20Design-blue.svg)](docs/ARCHITECTURE.md)
+[![API Spec](https://img.shields.io/badge/API-OpenAPI%203.0-orange.svg)](openapi.yaml)
 [![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -38,6 +41,14 @@ Rather than relying on a single learner, KAIROS utilizes a **Hybrid Ensemble**:
 - **LightGBM**: Optimized for high-speed gradient boosting.
 - **CatBoost**: Specialized handling for categorical feature interactions.
 - **Ensemble Logic**: Weighted averaging of 10+ cross-validated models to flatten individual model bias.
+
+### 4. Production Hardening (Security & Scalability)
+
+KAIROS is built for external-facing reliability:
+
+- **API Key Required**: Protected by `X-API-KEY` enforcement.
+- **DDoS Protection**: Integrated rate-limiting (10-20 req/min default).
+- **Secret Management**: Zero hardcoded credentials via Pydantic-Settings and `.env` support.
 
 ---
 
@@ -200,6 +211,8 @@ PYTHONPATH=. python src/kairos/evaluate.py     # Regression gate
 - `src/kairos/data/`: Transformers and feature engineering.
 - `frontend/`: Flask-based Dashboard for decision visualization.
 - `configs/`: Centralized YAML-based configuration management.
+- `docs/`: Technical documentation (Onboarding, Architecture, Research).
+- `openapi.yaml`: Formal API specification.
 
 ---
 

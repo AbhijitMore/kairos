@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: "KAIROS: Risk Decision Service"
+  description: "Probabilistic inference service for risk assessment. Provides precision decision intelligence using an ensemble of calibrated models."
+  version: "2.1.0"
+  contact:
+    name: "KAIROS Team"
+servers:
+  - url: http://localhost:8000
+    description: Local development server (default backend port)
+  - url: http://localhost:5000
+    description: Docker-compose proxy port
+
+paths:
+  /predict:
+    post:
+      summary: "Execute precision decision logic"
+      description: "Accepts a batch of raw instances, applies feature engineering via the internal pipeline, and returns policy-governed decisions (ACCEPT, REJECT, or ABSTAIN)."
+      operationId: executeInference
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BatchInferenceRequest"
+      responses:
+        "200":
+          description: "Successful decision batch"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PredictionResponse"
+        "400":
+          description: "Invalid input schema"
+        "503":
+          description: "Inference engine not ready (loading model)"
+        "500":
+          description: "Internal processing fault during inference"
+
+  /health:
+    get:
+      summary: "Service health check"
+      description: "Returns the operational status of the API and whether the ML engine has been successfully loaded."
+      operationId: getHealth
+      responses:
+        "200":
+          description: "Health status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  engine_ready:
+                    type: boolean
+                    example: true
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+  schemas:
+    AdultInstance:
+      type: object
+      required:
+        - age
+        - workclass
+        - education_num
+        - marital_status
+        - occupation
+        - relationship
+        - race
+        - sex
+        - capital_gain
+        - capital_loss
+        - hours_per_week
+        - native_country
+      properties:
+        age:
+          type: integer
+          example: 39
+        workclass:
+          type: string
+          example: "State-gov"
+        education_num:
+          type: integer
+          example: 13
+        marital_status:
+          type: string
+          example: "Never-married"
+        occupation:
+          type: string
+          example: "Adm-clerical"
+        relationship:
+          type: string
+          example: "Not-in-family"
+        race:
+          type: string
+          example: "White"
+        sex:
+          type: string
+          example: "Male"
+        capital_gain:
+          type: integer
+          example: 2174
+        capital_loss:
+          type: integer
+          example: 0
+        hours_per_week:
+          type: integer
+          example: 40
+        native_country:
+          type: string
+          example: "United-States"
+
+    BatchInferenceRequest:
+      type: object
+      required:
+        - instances
+      properties:
+        instances:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdultInstance"
+
+    PredictionResponse:
+      type: object
+      required:
+        - decision
+        - probability
+        - uncertainty
+        - cost_risk
+      properties:
+        decision:
+          type: string
+          enum: [ACCEPT, REJECT, ABSTAIN]
+          example: "ACCEPT"
+        probability:
+          type: number
+          format: float
+          example: 0.82
+        uncertainty:
+          type: number
+          format: float
+          example: 0.36
+        cost_risk:
+          type: number
+          format: float
+          example: 36.0

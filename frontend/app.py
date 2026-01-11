@@ -11,8 +11,8 @@ import random
 # Add project root to path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from src.kairos.data.loader import load_adult_data
-from src.kairos.utils.privacy import mask_for_review
+from src.kairos.data.loader import load_adult_data  # noqa: E402
+from src.kairos.utils.privacy import mask_for_review  # noqa: E402
 
 app = Flask(__name__)
 
@@ -24,6 +24,7 @@ logger = logging.getLogger("KAIROS-FRONTEND")
 # Dataset storage for demo
 DATASET = {}
 
+
 def load_dataset():
     """Loads the dataset into memory for random sampling in the demo."""
     global DATASET
@@ -34,43 +35,55 @@ def load_dataset():
     try:
         # Load raw data using the new modular loader
         df = load_adult_data()
-        
+
         # We'll use the combined set for the demo dashboard
-        DATASET['raw'] = df
+        DATASET["raw"] = df
         logger.info(f"KAIROS Frontend: Cache Warmup Complete. {len(df)} samples ready.")
     except Exception as e:
         logger.error(f"KAIROS Frontend: Cache Warmup Failed: {e}")
         DATASET = {}
 
-@app.route('/')
+
+@app.route("/")
 def index():
     if not DATASET:
         threading.Thread(target=load_dataset).start()
-    return render_template('index.html')
+    return render_template("index.html")
 
-@app.route('/random_profile', methods=['GET'])
+
+@app.route("/random_profile", methods=["GET"])
 def random_profile():
-    if not DATASET or 'raw' not in DATASET:
+    if not DATASET or "raw" not in DATASET:
         return jsonify({"error": "Data engine warming up..."}), 503
-        
+
     try:
-        df = DATASET['raw']
+        df = DATASET["raw"]
         idx = random.choice(df.index)
         row = df.loc[idx]
-        
+
         # Convert to dictionary and clean for JSON serialization
         raw_features = row.to_dict()
-        
+
         # Clean up columns not needed for the prediction API
-        prediction_payload = {k: v for k, v in raw_features.items() if k not in ['target', 'income', 'fnlwgt', 'education', 'split']}
-        
+        prediction_payload = {
+            k: v
+            for k, v in raw_features.items()
+            if k not in ["target", "income", "fnlwgt", "education", "split"]
+        }
+
         # --- SCHEMA-AWARE SANITIZATION: Force proper types for Pydantic compliance ---
         def sanitize(key, val):
-            numeric_fields = {"age", "education_num", "capital_gain", "capital_loss", "hours_per_week"}
-            
+            numeric_fields = {
+                "age",
+                "education_num",
+                "capital_gain",
+                "capital_loss",
+                "hours_per_week",
+            }
+
             if pd.isna(val) or (isinstance(val, float) and not np.isfinite(val)):
                 return 0 if key in numeric_fields else "?"
-            
+
             if isinstance(val, (np.integer, int)):
                 return int(val)
             if isinstance(val, (np.floating, float)):
@@ -91,20 +104,25 @@ def random_profile():
 
         # Apply privacy masking for the dashboard review section
         masked_features = mask_for_review(display_features)
-        
-        logger.info(f"Dashboard: Case Generated. Sanitized Keys: {len(sanitized_payload)}")
-        
-        return jsonify({
-            "raw_features": sanitized_payload,
-            "features_display": display_features,
-            "features_masked": masked_features,
-            "ground_truth": int(raw_features.get('target', 0))
-        })
+
+        logger.info(
+            f"Dashboard: Case Generated. Sanitized Keys: {len(sanitized_payload)}"
+        )
+
+        return jsonify(
+            {
+                "raw_features": sanitized_payload,
+                "features_display": display_features,
+                "features_masked": masked_features,
+                "ground_truth": int(raw_features.get("target", 0)),
+            }
+        )
     except Exception as e:
         logger.error(f"Random Profile Error: {e}", exc_info=True)
         return jsonify({"error": str(e)}), 500
 
-@app.post('/predict')
+
+@app.post("/predict")
 def predict():
     """
     Proxies prediction requests to the KAIROS Inference API.
@@ -112,18 +130,21 @@ def predict():
     """
     try:
         # The frontend now expects 'raw_features'
-        raw_features = request.json.get('raw_features')
+        raw_features = request.json.get("raw_features")
         if not raw_features:
-             return jsonify({"error": "No features provided"}), 400
-             
+            return jsonify({"error": "No features provided"}), 400
+
         # New API format: {"instances": [{"age": 35, ...}]}
         payload = {"instances": [raw_features]}
-        
+
+        API_KEY = os.getenv("API_KEY", "kairos_dev_key_2026")
+        headers = {"X-API-KEY": API_KEY}
         logger.info(f"Forwarding prediction request to {API_URL}")
-        resp = requests.post(API_URL, json=payload, timeout=10)
-        
+        resp = requests.post(API_URL, json=payload, headers=headers, timeout=10)
+
         if resp.status_code == 200:
             data = resp.json()
+
             # Secondary sanitization for frontend safety
             def clean_obj(obj):
                 if isinstance(obj, list):
@@ -139,14 +160,16 @@ def predict():
         else:
             logger.error(f"API returned error: {resp.status_code} - {resp.text}")
             return jsonify({"error": f"API Error: {resp.text}"}), resp.status_code
-            
+
     except Exception as e:
         logger.error(f"Frontend Proxy Error: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/health')
-def health():
-    return jsonify({"status": "ok", "dataset_loaded": 'raw' in DATASET})
 
-if __name__ == '__main__':
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok", "dataset_loaded": "raw" in DATASET})
+
+
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)

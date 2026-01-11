@@ -29,7 +29,7 @@ Compliance:
 Usage:
 ------
     from src.privacy import mask_for_review
-    
+
     raw_features = {"age": 39, "race": "White", "sex": "Male", ...}
     masked = mask_for_review(raw_features)
     # Output: {"age": "30-39", "race": "[PROTECTED]", "sex": "[PROTECTED]", ...}
@@ -42,43 +42,43 @@ logger = logging.getLogger(__name__)
 
 # Occupation categorization mapping
 OCCUPATION_CATEGORIES = {
-    'Tech-support': 'Technical',
-    'Craft-repair': 'Skilled Labor',
-    'Other-service': 'Service',
-    'Sales': 'Sales & Marketing',
-    'Exec-managerial': 'Professional',
-    'Prof-specialty': 'Professional',
-    'Handlers-cleaners': 'Service',
-    'Machine-op-inspct': 'Skilled Labor',
-    'Adm-clerical': 'Administrative',
-    'Farming-fishing': 'Agriculture',
-    'Transport-moving': 'Transportation',
-    'Priv-house-serv': 'Service',
-    'Protective-serv': 'Public Service',
-    'Armed-Forces': 'Public Service',
+    "Tech-support": "Technical",
+    "Craft-repair": "Skilled Labor",
+    "Other-service": "Service",
+    "Sales": "Sales & Marketing",
+    "Exec-managerial": "Professional",
+    "Prof-specialty": "Professional",
+    "Handlers-cleaners": "Service",
+    "Machine-op-inspct": "Skilled Labor",
+    "Adm-clerical": "Administrative",
+    "Farming-fishing": "Agriculture",
+    "Transport-moving": "Transportation",
+    "Priv-house-serv": "Service",
+    "Protective-serv": "Public Service",
+    "Armed-Forces": "Public Service",
 }
 
 
 def categorize_occupation(occupation: str) -> str:
     """
     Generalizes occupation to high-level category.
-    
+
     Args:
         occupation: Raw occupation string from dataset
-        
+
     Returns:
         High-level occupation category
     """
-    return OCCUPATION_CATEGORIES.get(occupation, 'Other')
+    return OCCUPATION_CATEGORIES.get(occupation, "Other")
 
 
 def generalize_age(age: Union[int, float]) -> str:
     """
     Generalizes age to 10-year ranges.
-    
+
     Args:
         age: Exact age value
-        
+
     Returns:
         Age range string (e.g., "30-39")
     """
@@ -94,41 +94,41 @@ def generalize_age(age: Union[int, float]) -> str:
 def generalize_marital_status(status: str) -> str:
     """
     Generalizes marital status to binary categories.
-    
+
     Args:
         status: Raw marital status string
-        
+
     Returns:
         "Partnered" or "Single"
     """
     status_lower = str(status).lower()
-    
-    if 'never' in status_lower:
-        return 'Single'
-        
-    partnered_keywords = ['married', 'spouse']
+
+    if "never" in status_lower:
+        return "Single"
+
+    partnered_keywords = ["married", "spouse"]
     for keyword in partnered_keywords:
         if keyword in status_lower:
-            return 'Partnered'
-    
-    return 'Single'
+            return "Partnered"
+
+    return "Single"
 
 
 def mask_for_review(features: Dict[str, Any]) -> Dict[str, Any]:
     """
     Applies privacy-preserving masking to feature dictionary.
-    
+
     This function implements a generalization-based masking strategy that:
     1. Redacts protected attributes completely
     2. Generalizes quasi-identifiers to reduce re-identification risk
     3. Preserves decision-relevant features
-    
+
     Args:
         features: Dictionary of raw feature values
-        
+
     Returns:
         Dictionary with masked/generalized values
-        
+
     Example:
         >>> raw = {"age": 39, "race": "White", "sex": "Male", "education_num": 13}
         >>> masked = mask_for_review(raw)
@@ -136,28 +136,30 @@ def mask_for_review(features: Dict[str, Any]) -> Dict[str, Any]:
         {"age": "30-39", "race": "[PROTECTED]", "sex": "[PROTECTED]", "education_num": 13}
     """
     masked = {}
-    
+
     for feature_name, value in features.items():
         # Protected attributes - Complete redaction (including proxies like relationship)
-        if feature_name in ['race', 'sex', 'native_country', 'relationship']:
-            masked[feature_name] = '[PROTECTED]'
+        if feature_name in ["race", "sex", "native_country", "relationship"]:
+            masked[feature_name] = "[PROTECTED]"
             logger.debug(f"Redacted protected attribute: {feature_name}")
-        
+
         # Quasi-identifiers - Generalization
-        elif feature_name == 'age':
+        elif feature_name == "age":
             masked[feature_name] = generalize_age(value)
-        
-        elif feature_name == 'marital_status':
+
+        elif feature_name == "marital_status":
             masked[feature_name] = generalize_marital_status(value)
-        
-        elif feature_name == 'occupation':
+
+        elif feature_name == "occupation":
             masked[feature_name] = categorize_occupation(value)
-        
+
         # Decision-relevant features - Preserve as-is
         else:
             masked[feature_name] = value
-    
-    logger.info(f"Masked {len([k for k, v in masked.items() if v == '[PROTECTED]'])} protected attributes")
+
+    logger.info(
+        f"Masked {len([k for k, v in masked.items() if v == '[PROTECTED]'])} protected attributes"
+    )
     return masked
 
 
@@ -165,52 +167,52 @@ def create_review_payload(
     case_id: str,
     raw_features: Dict[str, Any],
     model_probability: float,
-    model_uncertainty: float
+    model_uncertainty: float,
 ) -> Dict[str, Any]:
     """
     Creates a privacy-compliant payload for human review.
-    
+
     Args:
         case_id: Unique identifier for audit trail
         raw_features: Original feature dictionary
         model_probability: Calibrated probability from ensemble
         model_uncertainty: Uncertainty score
-        
+
     Returns:
         Review payload with masked features and metadata
     """
     return {
-        'case_id': case_id,
-        'features': mask_for_review(raw_features),
-        'model_assessment': {
-            'probability': round(model_probability, 3),
-            'uncertainty': round(model_uncertainty, 3),
-            'reason': 'ABSTAIN - Insufficient confidence for automated decision'
+        "case_id": case_id,
+        "features": mask_for_review(raw_features),
+        "model_assessment": {
+            "probability": round(model_probability, 3),
+            "uncertainty": round(model_uncertainty, 3),
+            "reason": "ABSTAIN - Insufficient confidence for automated decision",
         },
-        'review_instructions': (
-            'Please review the following case. Protected attributes have been '
-            'redacted to ensure unbiased decision-making. Focus on education, '
-            'work history, and financial indicators.'
-        )
+        "review_instructions": (
+            "Please review the following case. Protected attributes have been "
+            "redacted to ensure unbiased decision-making. Focus on education, "
+            "work history, and financial indicators."
+        ),
     }
 
 
 if __name__ == "__main__":
     # Example usage
     sample_case = {
-        'age': 39,
-        'workclass': 'State-gov',
-        'education_num': 13,
-        'marital_status': 'Never-married',
-        'occupation': 'Adm-clerical',
-        'race': 'White',
-        'sex': 'Male',
-        'capital_gain': 2174,
-        'capital_loss': 0,
-        'hours_per_week': 40,
-        'native_country': 'United-States'
+        "age": 39,
+        "workclass": "State-gov",
+        "education_num": 13,
+        "marital_status": "Never-married",
+        "occupation": "Adm-clerical",
+        "race": "White",
+        "sex": "Male",
+        "capital_gain": 2174,
+        "capital_loss": 0,
+        "hours_per_week": 40,
+        "native_country": "United-States",
     }
-    
+
     print("Original Features:")
     print(sample_case)
     print("\nMasked for Review:")
