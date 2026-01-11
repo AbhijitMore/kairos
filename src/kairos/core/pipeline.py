@@ -118,6 +118,13 @@ class KairosInferenceEngine:
         # 2. Load Ensemble Natively
         ensemble = HybridEnsemble.load(os.path.join(path, "ensemble"))
         
+        # Check version
+        meta_path = os.path.join(path, "ensemble", "metadata.joblib")
+        if os.path.exists(meta_path):
+             meta = joblib.load(meta_path)
+             version = meta.get('version', 'legacy')
+             logger.info(f"🦅 Model Loaded: HybridEnsemble v{version}")
+        
         # 3. Reconstruct full pipeline
         full_pipeline = Pipeline(steps=[
             *preprocess_pipe.steps,

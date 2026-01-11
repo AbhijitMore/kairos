@@ -110,7 +110,8 @@ class HybridEnsemble(BaseEstimator, ClassifierMixin):
         meta = {
             'feature_names': self.feature_names_,
             'classes': self.classes_.tolist(),
-            'model_types': [m[0] for m in self.models]
+            'model_types': [m[0] for m in self.models],
+            'version': '1.0.0'  # FAANG-Grade Versioning
         }
         joblib.dump(meta, os.path.join(directory, "metadata.joblib"))
 

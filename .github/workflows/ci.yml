@@ -34,3 +34,7 @@ jobs:
         run: |
           # Ensure the model directory exists and has metadata
           python -c "import os; assert os.path.exists('outputs/kairos_model/ensemble/metadata.joblib'), 'Model artifacts missing!'"
+
+      - name: 🛡️ Regression Gate (Precision > 95%)
+        run: |
+          PYTHONPATH=. python src/kairos/evaluate.py

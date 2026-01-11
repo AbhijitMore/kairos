@@ -43,7 +43,7 @@ Rather than relying on a single learner, KAIROS utilizes a **Hybrid Ensemble**:
 
 ## 🏗 System Architecture
 
-[![CI/CD](https://img.shields.io/badge/CI-GitHub%20Actions-blueviolet.svg)](.github/workflows/ci.yml)
+[![CI/CD](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml/badge.svg)](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/Research-Deep--Dive-gold.svg)](docs/RESEARCH.md)
 
 ```mermaid
@@ -63,17 +63,25 @@ graph TD
 
 ### 🧬 Scientific Rigor & Benchmarks
 
-We don't just claim performance; we prove it. Run our internal benchmarking suite to compare KAIROS against standard industry baselines:
+We don't just claim performance; we prove it. Run our canonical evaluation suite to verify our **96% Precision** and **<0.02 ECE** claims against your local instance:
 
 ```bash
-python scripts/benchmark_baselines.py
+PYTHONPATH=. python src/kairos/evaluate.py
 ```
+
+_Regression Gate: This script will exit with error code 1 if precision drops below 95% or ECE exceeds 0.02._
+
+**Analysis Sources:**
+
+- 📄 [Benchmark Analysis](notebooks/benchmark_evaluation.ipynb)
+- 📈 [Calibration Deep-Dive](notebooks/calibration_analysis.ipynb)
 
 | Metric                | Random Forest | **KAIROS Stack** | Rationale                                 |
 | :-------------------- | :-----------: | :--------------: | :---------------------------------------- |
 | **Precision**         |     78.3%     |    **96.1%**     | 18% lift via calibrated thresholding      |
 | **Automation Rate**   |     100%      |    **69.4%**     | Risk-averse filtering of borderline cases |
 | **Calibration (ECE)** |     0.12      |    **0.011**     | Isotonic Regression normalization         |
+| **Inference Skew**    |  Significant  |     **Zero**     | Unified Feature Engineering Pipeline      |
 
 ### 🛡️ Privacy-First ML & Ethics
 
@@ -81,24 +89,9 @@ KAIROS includes a **Privacy Masking Layer** designed for GDPR/CCMA compliance. R
 
 ---
 
-## 🛠 Usage & Reproducibility
+## 🛠 Quick Start (3 Minutes)
 
-### 1. Installation
-
-```bash
-git clone https://github.com/AbhijitMore/kairos.git
-cd kairos
-pip install -r requirements.txt
-```
-
-### 2. Train and Validate
-
-```bash
-# Trains ensemble, calibrates, and saves artifacts
-python main.py --hpo --trials 10
-```
-
-### 3. Launch the Stack (Docker)
+### 1. Launch the Stack
 
 KAIROS is fully containerized. Launch the Explorer Dashboard, API, and MLflow Tracking server with one command:
 
@@ -106,9 +99,49 @@ KAIROS is fully containerized. Launch the Explorer Dashboard, API, and MLflow Tr
 docker-compose up --build -d
 ```
 
-- **Dashboard**: `http://localhost:5000` — Visual decision explorer.
-- **Inference API**: `http://localhost:8000/docs` — Production FastAPI endpoint.
-- **MLflow Tracking**: `http://localhost:5050` — Model lineage and metrics.
+### 2. Verify Inference
+
+Test the API with a real request. The system will return a calibrated probability and a risk decision.
+
+```bash
+curl -X POST http://localhost:8000/predict \
+-H "Content-Type: application/json" \
+-d '{
+  "instances": [{
+    "age": 39,
+    "workclass": "State-gov",
+    "education_num": 13,
+    "marital_status": "Never-married",
+    "occupation": "Adm-clerical",
+    "relationship": "Not-in-family",
+    "race": "White",
+    "sex": "Male",
+    "capital_gain": 2174,
+    "capital_loss": 0,
+    "hours_per_week": 40,
+    "native_country": "United-States"
+  }]
+}'
+```
+
+**Expected Output:**
+
+```json
+[
+  {
+    "decision": "ACCEPT",
+    "probability": 0.81,
+    "uncertainty": 0.38,
+    "cost_risk": 38.0
+  }
+]
+```
+
+### 3. Explore Components
+
+- **Dashboard & Human Review UI**: [http://localhost:5000](http://localhost:5000)
+- **API Documentation (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **MLflow Experiment Tracking**: [http://localhost:5050](http://localhost:5050)
 
 ### Reliability Suite (Testing)
 
