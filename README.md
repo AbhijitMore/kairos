@@ -7,6 +7,8 @@
 [![API](https://img.shields.io/badge/Service-FastAPI-009485.svg)](http://localhost:8000/docs)
 [![Docker](https://img.shields.io/badge/Deployment-Docker%20Compose-2496ED.svg)](#-usage--deployment)
 
+![KAIROS Dashboard](docs/assets/dashboard.png)
+
 KAIROS is a mission-critical decision intelligence stack designed for high-stakes binary classification (Credit, Fraud, Risk). It bridges the gap between "notebook models" and "production systems" by enforcing rigorous data contracts, statistical reliability, and ethical grounding.
 
 ---
@@ -26,6 +28,8 @@ Standard GBDT models (LightGBM/CatBoost) often produce "shifted" scores that don
 
 - **The Problem**: A raw model might say `0.8` confidence for a group that only converts at `60%`.
 - **The Fix**: We map scores to empirical probabilities, reducing Expected Calibration Error (ECE) from **~0.15** to **< 0.02**.
+
+![KAIROS Calibration Curve](docs/assets/calibration.png)
 
 ### 3. Deep Diversity Ensemble Engine
 

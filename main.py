@@ -59,6 +59,10 @@ def main(args):
     logger.info(">>> Saving Robust ML Artifacts")
     os.makedirs("outputs", exist_ok=True)
     engine.save("outputs/kairos_model")
+    
+    # Generate and Save plots
+    from src.kairos.core.calibration import plot_reliability_diagram
+    plot_reliability_diagram(y_test, cal_probs, save_path="outputs/calibration_curve.png")
 
     
     # Log to MLflow
