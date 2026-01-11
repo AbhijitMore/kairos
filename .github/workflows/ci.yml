@@ -33,4 +33,4 @@ jobs:
       - name: Validate Model Artifacts
         run: |
           # Ensure the model directory exists and has metadata
-          python -c "import os; assert os.path.exists('outputs/kairos_model/metadata.joblib'), 'Model artifacts missing!'"
+          python -c "import os; assert os.path.exists('outputs/kairos_model/ensemble/metadata.joblib'), 'Model artifacts missing!'"
