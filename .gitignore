@@ -18,8 +18,7 @@ catboost_info/
 mlruns/
 outputs/*.log
 outputs/*.pkl
-outputs/plots/
-outputs/metrics/
+# outputs/plots/ - Keeping this ignored, but moving key charts to docs/assets
 
 # OS/IDE
 .DS_Store

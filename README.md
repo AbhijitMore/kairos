@@ -71,9 +71,9 @@ KAIROS includes a **Privacy Masking Layer** designed for GDPR/CCMA compliance.
 
 | Metric                | Baseline (GBDT) | **KAIROS Stack** | Rationale                                 |
 | :-------------------- | :-------------: | :--------------: | :---------------------------------------- |
-| **Precision**         |      86.2%      |    **97.1%**     | Achieved via high-confidence thresholding |
-| **Automation Rate**   |      100%       |    **81.0%**     | Safe handover of 19% borderline cases     |
-| **Calibration (ECE)** |      0.12       |    **< 0.02**    | Isotonic Regression normalization         |
+| **Precision**         |      78.3%      |    **96.1%**     | 18% lift via calibrated thresholding      |
+| **Automation Rate**   |      100%       |    **69.4%**     | Risk-averse filtering of borderline cases |
+| **Calibration (ECE)** |      0.12       |    **0.011**     | Isotonic Regression normalization         |
 | **Inference Skew**    |   Significant   |     **Zero**     | Unified Feature Engineering Pipeline      |
 
 ---
