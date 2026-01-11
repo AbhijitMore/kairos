@@ -1,0 +1,27 @@
+# Python Caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# ML Artifacts (Keep standard directories, ignore training junk)
+catboost_info/
+mlruns/
+outputs/*.log
+outputs/*.pkl
+outputs/plots/
+outputs/metrics/
+
+# OS/IDE
+.DS_Store
+.vscode/
+.idea/

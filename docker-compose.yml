@@ -1,0 +1,64 @@
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    ports:
+      - "5050:5050"
+    command: mlflow server --host 0.0.0.0 --port 5050 --allowed-hosts "*"
+    volumes:
+      - ./mlruns:/app/mlruns
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+      target: api
+    depends_on:
+      - mlflow
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+      - ./src:/app/src
+    environment:
+      - PYTHONPATH=/app
+      - MLFLOW_TRACKING_URI=http://mlflow:5050
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+      target: api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./src:/app/src
+      - ./data:/app/data
+    environment:
+      - PYTHONPATH=/app
+      - API_URL=http://api:8000/predict
+    command: ["python", "frontend/app.py"]
+    depends_on:
+      api:
+        condition: service_healthy
+
+  trainer:
+    build:
+      context: .
+      dockerfile: docker/api.Dockerfile
+      target: trainer
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+      - ./mlruns:/app/mlruns
+      - ./src:/app/src
+    environment:
+      - PYTHONPATH=/app
+      - MLFLOW_TRACKING_URI=http://mlflow:5050
+    command: ["--hpo", "--trials", "5"]
