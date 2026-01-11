@@ -30,6 +30,13 @@ jobs:
         run: |
           PYTHONPATH=. pytest --cov=src tests/ --cov-report=xml
 
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+          token: ${{ secrets.CODECOV_TOKEN }}
+
       - name: Validate Model Artifacts
         run: |
           # Ensure the model directory exists and has metadata
