@@ -75,7 +75,17 @@ graph TD
 
 ---
 
-## 4. Deployment Topology
+## 🧠 Model Strategy: The 10-Model Hybrid Ensemble
+
+KAIROS achieves state-of-the-art predictive stability by utilizing a **Hybrid Ensemble** architecture:
+
+- **Architecture Diversity**: We combine **LightGBM** (leaf-wise GBDT) with **CatBoost** (symmetric-tree GBDT). This ensures the engine captures both complex feature interactions and robust categorical patterns.
+- **Fold Diversity**: We utilize **5-Fold Stratified Cross-Validation**.
+- ** Consensus Logic**: 5 Folds × 2 Architectures = **10 Independent Models**. The final inference is a weighted consensus of all 10 artifacts, drastically reducing individual model variance and overfitting.
+
+---
+
+## 🚀 Deployment Topology
 
 The system is fully containerized using Docker, making it cloud-agnostic and reproducible.
 

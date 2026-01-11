@@ -125,4 +125,23 @@ KAIROS maintains a **production-ready logic gate** in its CI pipeline:
 
 ---
 
+## 🗺️ Design Trade-offs & Roadmap
+
+Every production system is a balance of trade-offs. Here is how KAIROS sits today and where it is headed in a high-scale environment.
+
+### **Current Known Limitations**
+
+- **Cold Start Latency (Ensemble Overhead)**: Loading the full **10-model weighted ensemble** (5 Folds × 2 Architectures) into memory takes ~3-5s during container startup. This is a deliberate trade-off: we sacrifice a few seconds of boot time to gain significant predictive stability and variance reduction.
+- **Local MLflow**: Currently relies on a local volume for model storage. In a multi-region cloud setup, this must be migrated to S3/GCS.
+- **Synchronous Inference**: The current FastAPI setup is optimized for low-latency single requests; high-throughput 10,000+ batch requests would benefit from an asynchronous worker-queue (Celery/RabbitMQ).
+
+### **Future Roadmap (Staff-Level Expansion)**
+
+- [ ] **Automated Drift Detection**: Integration with Evidently.ai to trigger retraining alerts via Prometheus when feature distributions shift.
+- [ ] **Shadow Mode Strategy**: Implementing a "Proxy-Pass" layer to run new model versions in parallel with the Champion model for risk-free A/B testing.
+- [ ] **Feature Store Integration**: Moving from unified helper classes to a robust Feature Store (Feast) for multi-service feature sharing.
+- [ ] **Kubernetes Helm Charts**: Standardizing deployment with HPA (Horizontal Pod Autoscaling) based on custom metrics (Decision Ratios).
+
+---
+
 _Built with focus on High-Availability, Scalability, and Statistical Transparency._
