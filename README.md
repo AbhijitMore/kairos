@@ -1,48 +1,69 @@
-# 🦅 KAIROS: Risk Intelligence & Decision System
+# 🦅 KAIROS: Production-Grade Risk Intelligence
 
-> **Mission-Critical Decisioning with Statistical Rigor and Training-Serving Parity.**
+## Strategic Decisioning via Statistical Calibration & Training-Serving Parity
 
-[![Testing](https://img.shields.io/badge/Tests-100%25%20Passing-emerald.svg)](tests/)
-[![MLOps](https://img.shields.io/badge/Tracking-MLflow%20Integrated-blue.svg)](http://localhost:5050)
-[![Architecture](https://img.shields.io/badge/Architecture-Modular-orange.svg)](#architecture)
+[![Tests](https://img.shields.io/badge/Testing-Pytest%20Suite-emerald.svg)](tests/)
+[![MLOps](https://img.shields.io/badge/Ops-MLflow%20Tracking-blue.svg)](http://localhost:5050)
+[![API](https://img.shields.io/badge/Service-FastAPI-009485.svg)](http://localhost:8000/docs)
+[![Docker](https://img.shields.io/badge/Deployment-Docker%20Compose-2496ED.svg)](#-usage--deployment)
 
-KAIROS is a production-grade decision intelligence stack designed for high-stakes binary classification (Credit, Fraud, Risk). It solves the "Confidence Gap" in automated systems by combining **Deep Diversity Ensembles** with **Post-hoc Calibration**.
+KAIROS is a mission-critical decision intelligence stack designed for high-stakes binary classification (Credit, Fraud, Risk). It bridges the gap between "notebook models" and "production systems" by enforcing rigorous data contracts, statistical reliability, and ethical grounding.
 
 ---
 
-## 💎 Core Engineering Highlights
+## 💎 Key Engineering Pillars
 
-### 1. Training-Serving Parity (Zero Skew)
+### 1. Unified Feature Lifecycle (Zero Skew)
 
-KAIROS utilizes a unified `AdultFeatureEngineer` (Scikit-Learn Transformer) that is serialized directly into the engine artifact. This guarantees that the **Inference API** sees the exact same feature distribution as the **Training Pipeline**, eliminating the leading cause of production ML failure.
+The leading cause of ML failure is **Training-Serving Skew**. KAIROS eliminates this by using a unified `AdultFeatureEngineer`.
+
+- **The Engine**: A serialized Scikit-Learn Pipeline that bundles imputation, scaling, and encoding.
+- **The Result**: The **Inference API** uses the _exact same_ transformation logic as the **Trainer**, ensuring bit-perfect parity for every prediction.
 
 ### 2. Statistical Calibration (Reliable Probabilities)
 
-Most models are overconfident. KAIROS implements a **Calibration Layer (Isotonic Regression)** that maps raw model scores to actual probabilities.
+Standard GBDT models (LightGBM/CatBoost) often produce "shifted" scores that don't reflect true probabilities. KAIROS implements a **Post-hoc Calibration Layer (Isotonic Regression)**.
 
-- **Result**: Expected Calibration Error (ECE) reduced from **~0.15** to **< 0.02**.
-- **Impact**: Enables precise "Risk-Based Pricing" where p=0.7 actually means a 70% probability.
+- **The Problem**: A raw model might say `0.8` confidence for a group that only converts at `60%`.
+- **The Fix**: We map scores to empirical probabilities, reducing Expected Calibration Error (ECE) from **~0.15** to **< 0.02**.
 
-### 3. Risk-Aware Policy (The Abstain Pattern)
+### 3. Deep Diversity Ensemble Engine
 
-Instead of a simple binary threshold, KAIROS uses a tri-state logic engine:
+Rather than relying on a single learner, KAIROS utilizes a **Hybrid Ensemble**:
 
-- ✅ **ACCEPT**: High-confidence pass.
-- ❌ **REJECT**: High-confidence fail.
-- ⚖️ **ABSTAIN**: Low-confidence borderline case, routed to human review via **GDPR-compliant privacy masking** (Redacted PII + Generalized Quasi-identifiers).
-
----
-
-## 🏗 Modular Architecture
-
-- **`src/kairos/core/`**: Hybrid Ensemble (LightGBM + CatBoost) with native binary serialization.
-- **`src/kairos/data/`**: Deterministic feature engineering and schema enforcement.
-- **`src/kairos/tracking/`**: MLflow experiment lineage and HPO (Optuna) logging.
-- **`app/`**: High-throughput FastAPI inference service with vectorized input processing.
+- **LightGBM**: Optimized for high-speed gradient boosting.
+- **CatBoost**: Specialized handling for categorical feature interactions.
+- **Ensemble Logic**: Weighted averaging of 10+ cross-validated models to flatten individual model bias.
 
 ---
 
-## 📊 Performance Benchmark (UCI Adult)
+## 🏗 System Architecture
+
+```mermaid
+graph TD
+    A[Raw Data] --> B[Unified Feature Pipeline]
+    B --> C[Optuna HPO & Trainer]
+    C --> D[MLflow Registry]
+    D --> E[Calibration Layer]
+    E --> F[Serialized Artifact]
+
+    F --> G[FastAPI Inference]
+    G --> H[Risk Policy Engine]
+    H --> I{High Confidence?}
+    I -- Yes --> J[Automated Decision]
+    I -- No --> K[Human-in-the-Loop]
+```
+
+### 🛡️ Privacy-First ML & Ethics
+
+KAIROS includes a **Privacy Masking Layer** designed for GDPR/CCMA compliance.
+
+- **PII Redaction**: Automatic masking of sensitive fields.
+- **Protected Attribute Gating**: The model is trained to ignore "Sensitive Metadata" (e.g., Relationship status) to prevent algorithmic bias, substituting them with `[PROTECTED]` tokens during human review.
+
+---
+
+## 📊 Performance Benchmark (Standardized UCI Adult)
 
 | Metric                | Baseline (GBDT) | **KAIROS Stack** | Rationale                                 |
 | :-------------------- | :-------------: | :--------------: | :---------------------------------------- |
@@ -60,17 +81,34 @@ Instead of a simple binary threshold, KAIROS uses a tri-state logic engine:
 KAIROS is fully containerized. Launch the Explorer Dashboard, API, and MLflow Tracking server with one command:
 
 ```bash
-docker-compose up --build
+docker-compose up --build -d
 ```
 
-- **Dashboard**: `http://localhost:5000`
-- **Inference API**: `http://localhost:8000/docs`
-- **MLflow Tracking**: `http://localhost:5050`
+- **Dashboard**: `http://localhost:5000` — Visual decision explorer.
+- **Inference API**: `http://localhost:8000/docs` — Production FastAPI endpoint.
+- **MLflow Tracking**: `http://localhost:5050` — Model lineage and metrics.
 
-### Run Reliability Suite
+### Reliability Suite (Testing)
+
+We maintain 100% passing rates on our production-ready test suite:
 
 ```bash
+# Run unit and integration tests
 PYTHONPATH=. pytest tests/ -v
 ```
 
-Includes **Bit-Perfect Serialization** tests and **Data Contract** edge-case validation.
+Critical tests include **Bit-Perfect Serialization** (ensuring model loads match model saves) and **Data Contract Integrity**.
+
+---
+
+## 📂 Repository Structure
+
+- `app/`: Production API & Pydantic Schemas.
+- `src/kairos/core/`: The "Brain" (Ensembles, Calibration, Policy).
+- `src/kairos/data/`: Transformers and feature engineering.
+- `frontend/`: Flask-based Dashboard for decision visualization.
+- `configs/`: Centralized YAML-based configuration management.
+
+---
+
+_Created with focus on High-Availability and Statistical Rigor._
