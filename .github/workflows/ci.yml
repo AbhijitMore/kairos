@@ -69,3 +69,5 @@ jobs:
         with:
           use-quiet-mode: "yes"
           check-modified-files-only: "yes"
+          base-path: "."
+          config-file: ".github/linters/mlc_config.json"
