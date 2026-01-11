@@ -73,6 +73,22 @@ class AdultFeatureEngineer(BaseEstimator, TransformerMixin):
             )
 
         # Replace any potential NaNs or infs generated
-        X = X.replace([np.inf, -np.inf], 0).fillna(0)
+        # Handle numeric and categorical columns separately
+        numeric_cols = X.select_dtypes(include=[np.number]).columns
+        categorical_cols = X.select_dtypes(include=["object", "category"]).columns
+
+        # For numeric columns: replace inf and fillna with 0
+        X[numeric_cols] = X[numeric_cols].replace([np.inf, -np.inf], 0).fillna(0)
+
+        # For categorical columns: only fillna with a string placeholder
+        for col in categorical_cols:
+            if X[col].isna().any():
+                # Add 'Unknown' to categories if not present, then fill
+                if isinstance(X[col].dtype, pd.CategoricalDtype):
+                    if "Unknown" not in X[col].cat.categories:
+                        X[col] = X[col].cat.add_categories(["Unknown"])
+                    X[col] = X[col].fillna("Unknown")
+                else:
+                    X[col] = X[col].fillna("Unknown")
 
         return X
