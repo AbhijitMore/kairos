@@ -142,16 +142,54 @@ curl -X POST http://localhost:8000/predict \
 - **API Documentation (Swagger)**: [http://localhost:8000/docs](http://localhost:8000/docs)
 - **MLflow Experiment Tracking**: [http://localhost:5050](http://localhost:5050)
 
-### Reliability Suite (Testing)
+### 4. Testing & Validation
 
-We maintain 100% passing rates on our production-ready test suite:
+KAIROS maintains a **production-grade test suite** with 100% passing rates. Our CI pipeline validates every commit.
+
+#### 🧪 **What We Test**
+
+| Test Category       | Coverage             | Purpose                                                    |
+| ------------------- | -------------------- | ---------------------------------------------------------- |
+| **API Integration** | FastAPI endpoints    | Request/response contracts, error handling                 |
+| **Model Inference** | Prediction pipeline  | Schema validation, probability ranges, batch processing    |
+| **Data Contracts**  | Feature engineering  | Unknown categories, missing values, out-of-bounds handling |
+| **Calibration**     | Isotonic regression  | ECE < 0.02, probability reliability                        |
+| **Policy Logic**    | Risk-aware decisions | Threshold behavior, abstention logic                       |
+| **Serialization**   | Model artifacts      | Bit-perfect reproducibility across save/load cycles        |
+
+#### 🚀 **Run Tests Locally**
 
 ```bash
-# Run unit and integration tests
-PYTHONPATH=. pytest tests/ -v
+# Install test dependencies
+pip install pytest pytest-cov ruff
+
+# Run full test suite with coverage
+PYTHONPATH=. pytest --cov=src tests/ -v
+
+# Run specific test categories
+PYTHONPATH=. pytest tests/unit/ -v           # Unit tests only
+PYTHONPATH=. pytest tests/integration/ -v   # Integration tests only
+
+# Generate coverage report
+PYTHONPATH=. pytest --cov=src tests/ --cov-report=html
+open htmlcov/index.html
 ```
 
-Critical tests include **Bit-Perfect Serialization** (ensuring model loads match model saves) and **Data Contract Integrity**.
+#### 🛡️ **CI Pipeline Validation**
+
+Our GitHub Actions workflow validates:
+
+1. **Linting** - Ruff code quality checks
+2. **Tests** - 13 passing tests across unit & integration suites
+3. **Model Artifacts** - Validates trained model metadata exists
+4. **Regression Gate** - Ensures Precision > 95% on holdout set
+
+```bash
+# Run the same checks CI runs
+ruff check .                                    # Linting
+PYTHONPATH=. pytest --cov=src tests/           # Tests
+PYTHONPATH=. python src/kairos/evaluate.py     # Regression gate
+```
 
 ---
 
