@@ -4,7 +4,6 @@
 
 ![Build Status](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml/badge.svg)
 ![Coverage](https://img.shields.io/codecov/c/github/AbhijitMore/kairos)
-![Coverage](https://img.shields.io/codecov/c/github/AbhijitMore/kairos)
 [![Code style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![FastAPI](https://img.shields.io/badge/API-FastAPI-009688.svg)](http://localhost:8000/docs)
