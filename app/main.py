@@ -16,6 +16,11 @@ from app.config import settings
 from src.kairos.core.pipeline import KairosInferenceEngine
 from src.kairos.core.policy import KairosPolicy
 
+# Observability: Prometheus
+from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+from fastapi import Response
+
 # Configuration
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("KAIROS-API")
@@ -32,6 +37,12 @@ class APIState:
 
 
 state = APIState()
+
+
+# Custom Metrics
+DECISION_COUNTER = Counter(
+    "kairos_decisions_total", "Total number of decisions made by KAIROS", ["decision"]
+)
 
 
 @asynccontextmanager
@@ -63,6 +74,12 @@ app = FastAPI(
     version="2.1.0",
     lifespan=lifespan,
 )
+
+
+@app.get("/metrics")
+async def metrics():
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
@@ -124,6 +141,9 @@ async def predict(
                 )
             )
 
+            # Increment Metric
+            DECISION_COUNTER.labels(decision=decision).inc()
+
         return results
 
     except Exception as e:
@@ -134,3 +154,7 @@ async def predict(
 @app.get("/health")
 async def health():
     return {"status": "healthy", "engine_ready": state.engine is not None}
+
+
+# Instrumentation
+Instrumentator().instrument(app)

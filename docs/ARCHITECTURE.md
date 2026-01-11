@@ -24,8 +24,14 @@ graph TD
         Engine -->|Uses| Pipeline[Feature Pipeline]
     end
 
+    subgraph "Observability & Registry"
+        Backend -->|Metrics| Prometheus[Prometheus]
+        Prometheus -->|Visuals| Grafana[Grafana Dashboard]
+        Engine -->|Logs| MLflow[MLflow Model Registry]
+    end
+
     subgraph "Quality & Monitoring"
-        Backend -->|Logs| Tracker[MLFlow / Logs]
+
     end
 ```
 
