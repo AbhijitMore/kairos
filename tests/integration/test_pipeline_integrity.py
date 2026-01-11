@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import joblib
 import os
 import pytest
 from src.kairos.core.pipeline import create_kairos_pipeline, KairosInferenceEngine

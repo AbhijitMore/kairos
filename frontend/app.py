@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, jsonify
 import requests
-import json
 import os
 import sys
 import pandas as pd
@@ -127,9 +126,12 @@ def predict():
             data = resp.json()
             # Secondary sanitization for frontend safety
             def clean_obj(obj):
-                if isinstance(obj, list): return [clean_obj(x) for x in obj]
-                if isinstance(obj, dict): return {k: clean_obj(v) for k, v in obj.items()}
-                if isinstance(obj, float) and not np.isfinite(obj): return 0.5
+                if isinstance(obj, list):
+                    return [clean_obj(x) for x in obj]
+                if isinstance(obj, dict):
+                    return {k: clean_obj(v) for k, v in obj.items()}
+                if isinstance(obj, float) and not np.isfinite(obj):
+                    return 0.5
                 return obj
 
             cleaned_data = clean_obj(data[0] if isinstance(data, list) else data)

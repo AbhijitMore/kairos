@@ -3,7 +3,6 @@ from sklearn.isotonic import IsotonicRegression
 from typing import Any
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.calibration import calibration_curve
 
 def calibrate_model(model: Any, X_val: np.ndarray, y_val: np.ndarray) -> Any:
     """

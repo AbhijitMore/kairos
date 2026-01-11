@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException, Depends
-import joblib
 import pandas as pd
 import numpy as np
 import os
@@ -9,7 +8,8 @@ from typing import List
 
 from app.schemas import BatchInferenceRequest, PredictionResponse
 from src.kairos.utils.config_loader import load_config
-from src.kairos.core.pipeline import KairosInferenceEngine, KairosPolicy
+from src.kairos.core.pipeline import KairosInferenceEngine
+from src.kairos.core.policy import KairosPolicy
 
 # Configuration
 logging.basicConfig(level=logging.INFO)

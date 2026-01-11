@@ -1,11 +1,9 @@
 import pandas as pd
 import numpy as np
-import time
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_score, accuracy_score
 from sklearn.model_selection import train_test_split
-import lightgbm as lgb
 
 from src.kairos.data.loader import load_adult_data
 from src.kairos.core.pipeline import KairosInferenceEngine

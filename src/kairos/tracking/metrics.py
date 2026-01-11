@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, 
-    f1_score, roc_auc_score, log_loss, confusion_matrix
+    f1_score, roc_auc_score, log_loss
 )
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 from src.kairos.core.policy import Action, KairosPolicy, compute_cost
 
 
@@ -67,9 +67,12 @@ def plot_confusion_matrix(y_true: np.ndarray, y_prob: np.ndarray, tau_low: float
     cm = np.zeros((3, 2), dtype=int)
     for p, t in zip(preds, y_true):
         col = int(t)
-        if p == Action.REJECT.value: row = 0
-        elif p == Action.ACCEPT.value: row = 1
-        else: row = 2
+        if p == Action.REJECT.value:
+            row = 0
+        elif p == Action.ACCEPT.value:
+            row = 1
+        else:
+            row = 2
         cm[row, col] += 1
         
     plt.figure(figsize=(10, 7))

@@ -1,9 +1,7 @@
 import logging
 import argparse
-import joblib
 import os
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, roc_auc_score, log_loss
 
 from src.kairos.utils.config_loader import load_config
 from src.kairos.data.loader import load_adult_data

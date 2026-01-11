@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List, Optional, Literal
+from typing import List, Literal
 
 class AdultInstance(BaseModel):
     age: int = Field(..., json_schema_extra={"examples": [39]})

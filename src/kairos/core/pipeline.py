@@ -1,5 +1,4 @@
 import logging
-import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
@@ -58,7 +57,6 @@ def create_kairos_pipeline(config):
     
     return full_pipeline
 
-from src.kairos.core.policy import KairosPolicy
 
 logger = logging.getLogger(__name__)
 
