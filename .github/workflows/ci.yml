@@ -12,16 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Ruff Check
+        uses: astral-sh/ruff-action@v1
         with:
-          python-version: "3.10"
-      - name: Install Ruff
-        run: pip install ruff
-      - name: Lint with Ruff
-        run: ruff check .
-      - name: Format Check with Ruff
-        run: ruff format --check .
+          args: "check"
+      - name: Ruff Format
+        uses: astral-sh/ruff-action@v1
+        with:
+          args: "format --check"
 
   test:
     name: Unit & Integration Tests
@@ -68,6 +66,4 @@ jobs:
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: "yes"
-          check-modified-files-only: "yes"
-          base-path: "."
-          config-file: ".github/linters/mlc_config.json"
+          config-file: "mlc_config.json"
