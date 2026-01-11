@@ -2,10 +2,12 @@
 
 ## Strategic Decisioning via Statistical Calibration & Training-Serving Parity
 
-[![Tests](https://img.shields.io/badge/Testing-Pytest%20Suite-emerald.svg)](tests/)
-[![MLOps](https://img.shields.io/badge/Ops-MLflow%20Tracking-blue.svg)](http://localhost:5050)
-[![API](https://img.shields.io/badge/Service-FastAPI-009485.svg)](http://localhost:8000/docs)
-[![Docker](https://img.shields.io/badge/Deployment-Docker%20Compose-2496ED.svg)](#-usage--deployment)
+[![CI/CD](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml/badge.svg)](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml)
+[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Code style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688.svg)](http://localhost:8000/docs)
+[![Docker](https://img.shields.io/badge/Deploy-Docker%20Compose-2496ED.svg)](docker-compose.yml)
 
 ![KAIROS Dashboard](docs/assets/dashboard.png)
 
@@ -43,7 +45,6 @@ Rather than relying on a single learner, KAIROS utilizes a **Hybrid Ensemble**:
 
 ## 🏗 System Architecture
 
-[![CI/CD](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml/badge.svg)](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml)
 [![Documentation](https://img.shields.io/badge/Research-Deep--Dive-gold.svg)](docs/RESEARCH.md)
 
 ```mermaid
