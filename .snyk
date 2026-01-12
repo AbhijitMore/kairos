@@ -29,4 +29,12 @@ ignore:
     - '*':
         reason: 'Unpatchable in MLflow 3.8.1. Risk mitigated by static environment and trusted artifact lifecycle.'
         expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210335':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. Risk acknowledged as inherent to pickle-based model loading in secured environments.'
+        expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210336':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. Mitigation relies on strictly controlled artifact access and authenticated pipelines.'
+        expires: 2026-04-12T16:00:00.000Z
 patch: {}
