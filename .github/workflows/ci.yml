@@ -40,6 +40,17 @@ jobs:
         run: |
           pip install pip-audit
           pip-audit
+      - name: Security Linting (Bandit)
+        run: |
+          pip install bandit
+          bandit -r src/ app/ -f json -o bandit-report.json
+          bandit -r src/ app/
+      - name: Supply Chain Security (Snyk)
+        run: |
+          npm install -g snyk
+          snyk test --severity-threshold=high
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
       - name: Run Tests
         run: |
           export PYTHONPATH=$PYTHONPATH:.
