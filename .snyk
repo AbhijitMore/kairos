@@ -1,0 +1,32 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.0
+ignore:
+  'SNYK-PYTHON-MLFLOW-7210300':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1 (CVE-2024-37054). KAIROS only loads locally generated, trusted models via specific internal pipelines.'
+        expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210309':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. Risk mitigated by loading only trusted, internally tracked artifacts.'
+        expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210311':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. Deserialization risk is inherent to pickle; KAIROS uses strict file-system permissions for model storage.'
+        expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210331':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. Mitigation: Model integrity verified via Git LFS / internal tracking.'
+        expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210332':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. (Code Injection). KAIROS operates in an authenticated (X-API-KEY) and isolated environment.'
+        expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210333':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. Risk acknowledged. Compensating controls: No arbitrary model loading allowed.'
+        expires: 2026-04-12T16:00:00.000Z
+  'SNYK-PYTHON-MLFLOW-7210334':
+    - '*':
+        reason: 'Unpatchable in MLflow 3.8.1. Risk mitigated by static environment and trusted artifact lifecycle.'
+        expires: 2026-04-12T16:00:00.000Z
+patch: {}
