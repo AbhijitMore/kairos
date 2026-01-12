@@ -38,7 +38,7 @@ def download_uci_adult(output_dir: str = "data") -> Tuple[str, str]:
     for url, path in urls.items():
         if not os.path.exists(path):
             logger.info(f"Downloading {url}...")
-            r = requests.get(url)
+            r = requests.get(url, timeout=30)
             with open(path, "wb") as f:
                 f.write(r.content)
     return train_path, test_path
