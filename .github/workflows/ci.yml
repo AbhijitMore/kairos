@@ -46,11 +46,11 @@ jobs:
           bandit -r src/ app/ -f json -o bandit-report.json
           bandit -r src/ app/
       - name: Supply Chain Security (Snyk)
-        run: |
-          npm install -g snyk
-          snyk test --severity-threshold=high
+        uses: snyk/actions/python-3.10@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
       - name: Run Tests
         run: |
           export PYTHONPATH=$PYTHONPATH:.
