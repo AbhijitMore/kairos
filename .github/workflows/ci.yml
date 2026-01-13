@@ -54,7 +54,7 @@ jobs:
       - name: Run Tests
         run: |
           export PYTHONPATH=$PYTHONPATH:.
-          pytest --cov=src --cov=app --cov-report=xml tests/
+          pytest --cov=src --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=75 tests/
       - name: Code Quality Regression Gate
         run: |
           export PYTHONPATH=$PYTHONPATH:.
