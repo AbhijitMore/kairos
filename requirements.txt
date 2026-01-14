@@ -22,3 +22,5 @@ seaborn==0.13.2
 flask==3.0.3
 tqdm==4.66.4
 python-dotenv==1.0.1
+celery==5.4.0
+redis==5.2.1

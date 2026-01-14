@@ -15,6 +15,8 @@ from app.schemas import BatchInferenceRequest, PredictionResponse
 from app.config import settings
 from src.kairos.core.pipeline import KairosInferenceEngine
 from src.kairos.core.policy import KairosPolicy
+from app.tasks import celery_app, predict_batch_task
+from celery.result import AsyncResult
 
 # Observability: Prometheus
 from prometheus_fastapi_instrumentator import Instrumentator
@@ -149,6 +151,51 @@ async def predict(
     except Exception as e:
         logger.error(f"Inference Fault: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail="Internal processing error.")
+
+
+@app.post("/predict/batch/async")
+@limiter.limit(settings.rate_limit)
+async def predict_batch_async(
+    request: Request,
+    inference_request: BatchInferenceRequest,
+    _api_key: str = Depends(get_api_key),
+):
+    """
+    Kicks off an asynchronous batch inference task.
+    Returns a task_id which can be polled for results.
+    """
+    # Convert Pydantic instances to raw dicts for Celery serialization
+    records = [inst.model_dump() for inst in inference_request.instances]
+
+    # Trigger Celery task
+    task = predict_batch_task.delay(records)
+
+    return {
+        "task_id": task.id,
+        "status": "PENDING",
+        "poll_url": f"/predict/status/{task.id}",
+    }
+
+
+@app.get("/predict/status/{task_id}")
+async def get_task_status(task_id: str, _api_key: str = Depends(get_api_key)):
+    """
+    Polls the status of an asynchronous batch task.
+    """
+    result = AsyncResult(task_id, app=celery_app)
+
+    response = {
+        "task_id": task_id,
+        "status": result.status,
+    }
+
+    if result.ready():
+        if result.successful():
+            response["result"] = result.result
+        else:
+            response["error"] = str(result.result)
+
+    return response
 
 
 @app.get("/health")
