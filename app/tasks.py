@@ -1,7 +1,7 @@
 from celery import Celery
 from typing import List, Dict, Any
 import os
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 import pandas as pd
 from src.kairos.core.pipeline import KairosInferenceEngine
 
@@ -51,5 +51,5 @@ def predict_batch_task(records: List[Dict[str, Any]]) -> Dict[str, Any]:
     return {
         "predictions": probs.tolist(),
         "count": len(records),
-        "processed_at": datetime.now(UTC).isoformat(),
+        "processed_at": datetime.now(timezone.utc).isoformat(),
     }
