@@ -1,5 +1,5 @@
 # --- BASE STAGE ---
-FROM python:3.10-slim AS base
+FROM python:3.11-slim AS base
 
 WORKDIR /app
 

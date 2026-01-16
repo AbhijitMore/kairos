@@ -13,11 +13,13 @@ import joblib
 logger = logging.getLogger(__name__)
 
 
-class HybridEnsemble(BaseEstimator, ClassifierMixin):
+class HybridEnsemble(ClassifierMixin, BaseEstimator):
     """
     SOTA Probabilistic Ensemble combining LightGBM and CatBoost.
     Refactored to support native model serialization.
     """
+
+    _estimator_type = "classifier"
 
     def __init__(
         self, lgb_params: Dict[str, Any], cat_params: Dict[str, Any], n_folds: int = 5
