@@ -13,6 +13,8 @@ Run with: pytest tests/e2e/test_ui.py --headless
 """
 
 import pytest
+
+pytestmark = pytest.mark.e2e
 import time
 import os
 from selenium import webdriver

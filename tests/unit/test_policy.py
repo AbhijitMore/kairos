@@ -1,3 +1,8 @@
+import pytest
+
+pytestmark = pytest.mark.unit
+
+
 import numpy as np
 from src.kairos.core.policy import KairosPolicy, Action, compute_cost
 

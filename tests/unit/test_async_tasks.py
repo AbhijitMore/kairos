@@ -1,3 +1,8 @@
+import pytest
+
+pytestmark = pytest.mark.unit
+
+
 from unittest.mock import patch, MagicMock
 import numpy as np
 from app.tasks import predict_batch_task

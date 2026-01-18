@@ -1,6 +1,15 @@
+import pytest
+
+pytestmark = pytest.mark.unit
+
+
 import pandas as pd
 import numpy as np
 import pytest
+
+pytestmark = pytest.mark.unit
+
+
 from src.kairos.data.transformers import AdultFeatureEngineer
 from src.kairos.core.pipeline import create_kairos_pipeline
 from src.kairos.utils.config_loader import load_config

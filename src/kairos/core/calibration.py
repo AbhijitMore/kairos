@@ -1,6 +1,6 @@
 from sklearn.calibration import calibration_curve
 from sklearn.isotonic import IsotonicRegression
-from typing import Any
+from typing import Any, Optional
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -42,7 +42,7 @@ def plot_reliability_diagram(
     y_true: np.ndarray,
     y_prob: np.ndarray,
     title: str = "Calibration Curve",
-    save_path: str = None,
+    save_path: Optional[str] = None,
 ):
     """
     Generates a calibration (reliability) diagram.

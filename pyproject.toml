@@ -41,11 +41,41 @@ dependencies = [
     "redis==5.2.1"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "mypy==1.15.0",
+    "ruff==0.9.2",
+    "selenium==4.21.0",
+    "locust==2.28.1",
+    "types-requests",
+    "types-PyYAML",
+    "pandas-stubs"
+]
+
 [tool.ruff]
 line-length = 88
 target-version = "py312"
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["E402"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = true
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "--cov=src --cov=app --cov-report=term-missing"
+addopts = "--cov=src --cov=app --cov-report=term-missing -v"
+markers = [
+    "unit: Small, fast tests for individual functions and classes.",
+    "integration: Tests for API endpoints and component interactions.",
+    "chaos: Failure injection and system robustness tests.",
+    "slow: Tests that take a significant time to run.",
+    "e2e: End-to-end user journey tests using browser automation."
+]

@@ -12,6 +12,8 @@ Requires: pytest-timeout, requests
 """
 
 import pytest
+
+pytestmark = pytest.mark.chaos
 import requests
 import time
 import os

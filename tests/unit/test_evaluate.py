@@ -1,4 +1,13 @@
 import pytest
+
+pytestmark = pytest.mark.unit
+
+
+import pytest
+
+pytestmark = pytest.mark.unit
+
+
 from unittest.mock import patch, MagicMock
 import numpy as np
 import pandas as pd

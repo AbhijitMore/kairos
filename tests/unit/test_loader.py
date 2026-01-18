@@ -1,3 +1,8 @@
+import pytest
+
+pytestmark = pytest.mark.unit
+
+
 import pandas as pd
 from unittest.mock import patch, MagicMock
 import os

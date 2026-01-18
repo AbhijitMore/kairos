@@ -1,5 +1,14 @@
+import pytest
+
+pytestmark = pytest.mark.unit
+
+
 import numpy as np
 import pytest
+
+pytestmark = pytest.mark.unit
+
+
 from sklearn.linear_model import LogisticRegression
 from src.kairos.core.calibration import calibrate_model, compute_ece
 

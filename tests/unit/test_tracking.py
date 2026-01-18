@@ -1,5 +1,14 @@
+import pytest
+
+pytestmark = pytest.mark.unit
+
+
 import numpy as np
 import pytest
+
+pytestmark = pytest.mark.unit
+
+
 from src.kairos.tracking.metrics import evaluate_probabilistic_model, evaluate_policy
 
 
