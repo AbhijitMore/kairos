@@ -86,10 +86,12 @@ services:
       - ./data:/app/data
       - ./mlruns:/app/mlruns
       - ./src:/app/src
+      - ./train.py:/app/train.py
+      - ./config:/app/config
     environment:
       - PYTHONPATH=/app
       - MLFLOW_TRACKING_URI=http://mlflow:5050
-    command: ["--hpo", "--trials", "5"]
+    command: ["python", "train.py", "--hpo", "--trials", "5"]
 
   prometheus:
     image: prom/prometheus:latest
