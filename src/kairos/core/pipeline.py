@@ -7,7 +7,9 @@ from sklearn.impute import SimpleImputer
 from src.kairos.data.transformers import AdultFeatureEngineer
 from src.kairos.core.models import HybridEnsemble
 
-logger = logging.getLogger(__name__)
+from src.kairos.utils.logging import setup_kairos_logger
+
+logger = setup_kairos_logger("kairos.core.pipeline")
 
 
 def create_kairos_pipeline(config):

@@ -17,7 +17,7 @@ from src.kairos.utils.privacy import mask_for_review  # noqa: E402
 app = Flask(__name__)
 
 # Configuration
-API_URL = os.getenv("API_URL", "http://localhost:8000/predict")
+API_URL = os.getenv("API_URL", "http://localhost:8000/api/v1/predict")
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("KAIROS-FRONTEND")
 
