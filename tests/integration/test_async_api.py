@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 
 
 @pytest.mark.integration
-@patch("app.routers.prediction.predict_batch_task.delay")
+@patch("kairos.api.routers.prediction.predict_batch_task.delay")
 def test_predict_batch_async_endpoint(
     mock_delay, client, sample_instance, auth_headers
 ):
@@ -26,7 +26,7 @@ def test_predict_batch_async_endpoint(
 
 
 @pytest.mark.integration
-@patch("app.routers.prediction.AsyncResult")
+@patch("kairos.api.routers.prediction.AsyncResult")
 def test_get_task_status_endpoint(mock_async_result, client, auth_headers):
     # Mock AsyncResult behavior
     mock_result = MagicMock()

@@ -52,7 +52,7 @@ jobs:
           args: --severity-threshold=high --skip-unresolved
       - name: Run Tests
         run: |
-          export PYTHONPATH=$PYTHONPATH:.
+          export PYTHONPATH=$PYTHONPATH:src
           # Exclude slow chaos and e2e tests from CI - run only unit and integration
           pytest tests/unit/ tests/integration/ --cov=src --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=75
       - name: Code Quality Regression Gate
