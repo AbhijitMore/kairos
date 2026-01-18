@@ -6,12 +6,12 @@ from typing import List
 from celery.result import AsyncResult
 
 from app.schemas import BatchInferenceRequest, PredictionResponse
-from app.dependencies import get_inference_deps, get_api_key
+from app.dependencies import get_inference_deps, get_api_key, limiter
 from app.tasks import celery_app, predict_batch_task
 from prometheus_client import Counter
 
 logger = logging.getLogger("kairos.api.prediction")
-router = APIRouter(prefix="/v1/predict", tags=["prediction"])
+router = APIRouter(prefix="/predict", tags=["prediction"])
 
 # Custom Metrics
 DECISION_COUNTER = Counter(
@@ -26,6 +26,7 @@ def sanitize_val(v):
 
 
 @router.post("", response_model=List[PredictionResponse])
+@limiter.limit("500/minute")
 async def predict(
     request: Request,
     inference_request: BatchInferenceRequest,

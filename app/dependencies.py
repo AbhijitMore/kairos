@@ -3,10 +3,15 @@ from fastapi.security.api_key import APIKeyHeader
 from app.config import settings
 from src.kairos.core.pipeline import KairosInferenceEngine
 from src.kairos.core.policy import KairosPolicy
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 import os
 import logging
 
 logger = logging.getLogger("kairos.api.deps")
+
+# Rate Limiter (shared)
+limiter = Limiter(key_func=get_remote_address)
 
 # API Key Security
 api_key_header = APIKeyHeader(name="X-API-KEY", auto_error=False)
@@ -25,13 +30,17 @@ class APIState:
 
         model_dir = settings.model_dir
         if os.path.exists(model_dir):
-            logger.info(f"Loading KAIROS Engine from {model_dir}...")
-            cls._engine = KairosInferenceEngine.load(model_dir)
-            cls._policy = KairosPolicy(
-                tau_low=settings.tau_low, tau_high=settings.tau_high
-            )
-            cls._initialized = True
-            logger.info("🦅 Engine and Policy initialized.")
+            try:
+                logger.info(f"Loading KAIROS Engine from {model_dir}...")
+                cls._engine = KairosInferenceEngine.load(model_dir)
+                cls._policy = KairosPolicy(
+                    tau_low=settings.tau_low, tau_high=settings.tau_high
+                )
+                cls._initialized = True
+                logger.info("🦅 Engine and Policy initialized.")
+            except Exception as e:
+                logger.error(f"Failed to initialize Engine: {str(e)}")
+                cls._initialized = False
         else:
             logger.warning("Engine artifact not found. API in restricted mode.")
 

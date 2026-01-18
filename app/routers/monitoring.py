@@ -16,7 +16,9 @@ async def metrics():
 @router.get("/health")
 async def health():
     """
-    Service health check.
+    Service health check. Does not raise 503.
     """
-    engine, _ = APIState.get_engine()
-    return {"status": "healthy", "engine_ready": engine is not None}
+    return {
+        "status": "healthy",
+        "engine_ready": APIState._engine is not None and APIState._initialized,
+    }

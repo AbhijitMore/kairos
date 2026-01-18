@@ -1,7 +1,8 @@
 import pytest
 import numpy as np
 from fastapi.testclient import TestClient
-from app.main import app, get_engine
+from app.main import app
+from app.dependencies import get_inference_deps
 from src.kairos.core.policy import KairosPolicy
 
 
@@ -31,7 +32,7 @@ def client(mock_engine, mock_policy):
     def override_get_engine():
         return mock_engine, mock_policy
 
-    app.dependency_overrides[get_engine] = override_get_engine
+    app.dependency_overrides[get_inference_deps] = override_get_engine
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()

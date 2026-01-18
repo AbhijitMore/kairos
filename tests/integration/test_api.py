@@ -4,7 +4,7 @@ import pytest
 @pytest.mark.integration
 def test_predict_endpoint_success(client, sample_instance, auth_headers):
     payload = {"instances": [sample_instance]}
-    response = client.post("/predict", json=payload, headers=auth_headers)
+    response = client.post("/api/v1/predict", json=payload, headers=auth_headers)
     assert response.status_code == 200
     data = response.json()
     assert len(data) == 1
@@ -16,12 +16,12 @@ def test_predict_endpoint_success(client, sample_instance, auth_headers):
 def test_predict_endpoint_unauthorized(client):
     payload = {"instances": []}
     # No header
-    response = client.post("/predict", json=payload)
+    response = client.post("/api/v1/predict", json=payload)
     assert response.status_code == 403
 
     # Invalid Key
     headers = {"X-API-KEY": "wrong_key"}
-    response = client.post("/predict", json=payload, headers=headers)
+    response = client.post("/api/v1/predict", json=payload, headers=headers)
     assert response.status_code == 403
 
 

@@ -2,20 +2,19 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 import logging
 
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.dependencies import APIState
+from app.dependencies import APIState, limiter
 from app.routers import prediction, monitoring
 from src.kairos.utils.logging import setup_kairos_logger
 
 # Standardized Logger
 logger = setup_kairos_logger("kairos.api", level=logging.INFO)
 
-# Rate Limiter
-limiter = Limiter(key_func=get_remote_address)
+# Logger is already setup in dependencies or main
 
 
 @asynccontextmanager
@@ -37,6 +36,7 @@ app = FastAPI(
 # Exception Handlers
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+app.add_middleware(SlowAPIMiddleware)
 
 # Instrumentation
 Instrumentator().instrument(app).expose(app, endpoint="/metrics")
