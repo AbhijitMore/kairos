@@ -26,6 +26,7 @@ services:
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./src:/app/src
+      - ./app:/app/app
       - ./config:/app/config
     environment:
       - PYTHONPATH=/app
@@ -51,6 +52,7 @@ services:
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./src:/app/src
+      - ./app:/app/app
     environment:
       - PYTHONPATH=/app
       - MLFLOW_TRACKING_URI=http://mlflow:5050
@@ -66,11 +68,12 @@ services:
       - "5000:5000"
     volumes:
       - ./frontend:/app/frontend
+      - ./app:/app/app
       - ./src:/app/src
       - ./data:/app/data
     environment:
       - PYTHONPATH=/app
-      - API_URL=http://api:8000/predict
+      - API_URL=http://api:8000/api/v1/predict
       - API_KEY=${API_KEY:-kairos_dev_key_2026}
     command: ["python", "frontend/app.py"]
     depends_on:
@@ -87,6 +90,7 @@ services:
       - ./data:/app/data
       - ./mlruns:/app/mlruns
       - ./src:/app/src
+      - ./app:/app/app
       - ./train.py:/app/train.py
       - ./config:/app/config
     environment:
