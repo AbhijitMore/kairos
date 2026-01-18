@@ -148,7 +148,7 @@ class KairosInferenceEngine:
         """
         import joblib
         import os
-        import pickle
+        import pickle  # nosec B403 - only used for loading trusted model files
 
         # Custom unpickler to remap 'src.kairos' -> 'kairos' (for legacy models)
         class LegacyUnpickler(pickle.Unpickler):
