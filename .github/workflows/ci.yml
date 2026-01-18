@@ -57,7 +57,7 @@ jobs:
           pytest tests/unit/ tests/integration/ --cov=src --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=75
       - name: Code Quality Regression Gate
         run: |
-          export PYTHONPATH=$PYTHONPATH:.
+          export PYTHONPATH=$PYTHONPATH:src
           python src/kairos/evaluate.py
 
   docs:

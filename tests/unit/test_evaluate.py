@@ -14,10 +14,10 @@ import pandas as pd
 from kairos.evaluate import evaluate
 
 
-@patch("src.kairos.evaluate.load_adult_data")
-@patch("src.kairos.evaluate.KairosInferenceEngine.load")
-@patch("src.kairos.evaluate.sys.exit")
-@patch("src.kairos.evaluate.KairosPolicy")
+@patch("kairos.evaluate.load_adult_data")
+@patch("kairos.evaluate.KairosInferenceEngine.load")
+@patch("kairos.evaluate.sys.exit")
+@patch("kairos.evaluate.KairosPolicy")
 def test_evaluate_success(mock_policy_cls, mock_exit, mock_engine_load, mock_load_data):
     mock_exit.side_effect = SystemExit
 
@@ -50,9 +50,9 @@ def test_evaluate_success(mock_policy_cls, mock_exit, mock_engine_load, mock_loa
     mock_exit.assert_called_with(0)
 
 
-@patch("src.kairos.evaluate.load_adult_data")
-@patch("src.kairos.evaluate.KairosInferenceEngine.load")
-@patch("src.kairos.evaluate.sys.exit")
+@patch("kairos.evaluate.load_adult_data")
+@patch("kairos.evaluate.KairosInferenceEngine.load")
+@patch("kairos.evaluate.sys.exit")
 def test_evaluate_model_not_found(mock_exit, mock_engine_load, mock_load_data):
     mock_exit.side_effect = SystemExit
 
@@ -74,12 +74,12 @@ def test_evaluate_model_not_found(mock_exit, mock_engine_load, mock_load_data):
     mock_exit.assert_called_with(1)
 
 
-@patch("src.kairos.evaluate.load_adult_data")
-@patch("src.kairos.evaluate.KairosInferenceEngine.load")
-@patch("src.kairos.evaluate.sys.exit")
-@patch("src.kairos.evaluate.KairosPolicy")
-@patch("src.kairos.evaluate.precision_score")
-@patch("src.kairos.evaluate.compute_ece")
+@patch("kairos.evaluate.load_adult_data")
+@patch("kairos.evaluate.KairosInferenceEngine.load")
+@patch("kairos.evaluate.sys.exit")
+@patch("kairos.evaluate.KairosPolicy")
+@patch("kairos.evaluate.precision_score")
+@patch("kairos.evaluate.compute_ece")
 def test_evaluate_regression_failure_precision(
     mock_ece,
     mock_precision,
@@ -118,12 +118,12 @@ def test_evaluate_regression_failure_precision(
     mock_exit.assert_called_with(1)
 
 
-@patch("src.kairos.evaluate.load_adult_data")
-@patch("src.kairos.evaluate.KairosInferenceEngine.load")
-@patch("src.kairos.evaluate.sys.exit")
-@patch("src.kairos.evaluate.KairosPolicy")
-@patch("src.kairos.evaluate.precision_score")
-@patch("src.kairos.evaluate.compute_ece")
+@patch("kairos.evaluate.load_adult_data")
+@patch("kairos.evaluate.KairosInferenceEngine.load")
+@patch("kairos.evaluate.sys.exit")
+@patch("kairos.evaluate.KairosPolicy")
+@patch("kairos.evaluate.precision_score")
+@patch("kairos.evaluate.compute_ece")
 def test_evaluate_regression_failure_ece(
     mock_ece,
     mock_precision,

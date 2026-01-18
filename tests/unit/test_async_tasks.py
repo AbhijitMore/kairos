@@ -8,7 +8,7 @@ import numpy as np
 from kairos.api.tasks import predict_batch_task
 
 
-@patch("app.tasks.get_engine")
+@patch("kairos.api.tasks.get_engine")
 def test_predict_batch_task(mock_get_engine):
     # Setup mock engine
     mock_engine = MagicMock()

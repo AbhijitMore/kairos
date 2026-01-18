@@ -15,11 +15,11 @@ test:
 
 test-unit:
 	@echo "📦 Running unit tests..."
-	PYTHONPATH=. pytest -m unit --no-cov
+	PYTHONPATH=src pytest -m unit --no-cov
 
 test-integration:
 	@echo "🔗 Running integration tests..."
-	PYTHONPATH=. pytest -m integration --no-cov
+	PYTHONPATH=src pytest -m integration --no-cov
 
 # --- Code Quality ---
 lint:
@@ -34,7 +34,7 @@ type-check:
 # --- Execution ---
 train:
 	@echo "🏋️ Training KAIROS model..."
-	PYTHONPATH=. python train.py --hpo --trials 10
+	PYTHONPATH=src python train.py --hpo --trials 10
 
 api:
 	@echo "📡 Starting FastAPI Service..."

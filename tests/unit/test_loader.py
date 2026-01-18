@@ -9,9 +9,9 @@ import os
 from kairos.data.loader import download_uci_adult, load_adult_data, COLUMN_NAMES
 
 
-@patch("src.kairos.data.loader.requests.get")
-@patch("src.kairos.data.loader.os.path.exists")
-@patch("src.kairos.data.loader.open")
+@patch("kairos.data.loader.requests.get")
+@patch("kairos.data.loader.os.path.exists")
+@patch("kairos.data.loader.open")
 def test_download_uci_adult(mock_open, mock_exists, mock_requests):
     mock_exists.return_value = False
     mock_response = MagicMock()
@@ -27,8 +27,8 @@ def test_download_uci_adult(mock_open, mock_exists, mock_requests):
     mock_open.assert_called()
 
 
-@patch("src.kairos.data.loader.download_uci_adult")
-@patch("src.kairos.data.loader.pd.read_csv")
+@patch("kairos.data.loader.download_uci_adult")
+@patch("kairos.data.loader.pd.read_csv")
 def test_load_adult_data(mock_read_csv, mock_download):
     mock_download.return_value = ("train.csv", "test.csv")
 
