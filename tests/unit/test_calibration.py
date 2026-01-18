@@ -10,7 +10,7 @@ pytestmark = pytest.mark.unit
 
 
 from sklearn.linear_model import LogisticRegression
-from src.kairos.core.calibration import calibrate_model, compute_ece
+from kairos.core.calibration import calibrate_model, compute_ece
 
 
 def test_compute_ece():

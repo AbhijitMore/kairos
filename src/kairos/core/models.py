@@ -6,7 +6,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 from sklearn.model_selection import StratifiedKFold
 from copy import deepcopy
 from typing import List, Tuple, Optional, Dict, Any
-from src.kairos.utils.logging import setup_kairos_logger
+from kairos.utils.logging import setup_kairos_logger
 import os
 import joblib
 

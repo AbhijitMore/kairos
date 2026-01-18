@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 import os
 from datetime import datetime, timezone
 import pandas as pd
-from src.kairos.core.pipeline import KairosInferenceEngine
+from kairos.core.pipeline import KairosInferenceEngine
 
 # Initialize Celery
 # Using environment variables for broker/backend to support Docker/Local flexibility

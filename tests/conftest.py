@@ -1,9 +1,9 @@
 import pytest
 import numpy as np
 from fastapi.testclient import TestClient
-from app.main import app
-from app.dependencies import get_inference_deps
-from src.kairos.core.policy import KairosPolicy
+from kairos.api.main import app
+from kairos.api.dependencies import get_inference_deps
+from kairos.core.policy import KairosPolicy
 
 
 # Mock Engine for consistent API testing without loading 500MB of artifacts

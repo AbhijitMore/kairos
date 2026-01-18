@@ -23,13 +23,13 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - ./models:/app/models
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./src:/app/src
-      - ./app:/app/app
       - ./config:/app/config
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/src
       - MLFLOW_TRACKING_URI=http://mlflow:5050
       - REDIS_URL=redis://redis:6379/0
       - API_KEY=${API_KEY:-kairos_dev_key_2026}
@@ -44,20 +44,20 @@ services:
       context: .
       dockerfile: docker/api.Dockerfile
       target: api
-    command: celery -A app.tasks worker --loglevel=info
+    command: celery -A kairos.api.tasks worker --loglevel=info
     depends_on:
       - redis
       - mlflow
     volumes:
+      - ./models:/app/models
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./src:/app/src
-      - ./app:/app/app
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/src
       - MLFLOW_TRACKING_URI=http://mlflow:5050
       - REDIS_URL=redis://redis:6379/0
-      - MODEL_PATH=/app/outputs/kairos_model
+      - MODEL_PATH=/app/models/v1/kairos_model
 
   dashboard:
     build:
@@ -67,15 +67,15 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./frontend:/app/frontend
-      - ./app:/app/app
+      - ./models:/app/models
+      - ./outputs:/app/outputs
       - ./src:/app/src
       - ./data:/app/data
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/src
       - API_URL=http://api:8000/api/v1/predict
       - API_KEY=${API_KEY:-kairos_dev_key_2026}
-    command: ["python", "frontend/app.py"]
+    command: ["python", "src/kairos/web/app.py"]
     depends_on:
       api:
         condition: service_healthy
@@ -86,15 +86,15 @@ services:
       dockerfile: docker/api.Dockerfile
       target: trainer
     volumes:
+      - ./models:/app/models
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./mlruns:/app/mlruns
       - ./src:/app/src
-      - ./app:/app/app
       - ./train.py:/app/train.py
       - ./config:/app/config
     environment:
-      - PYTHONPATH=/app
+      - PYTHONPATH=/app/src
       - MLFLOW_TRACKING_URI=http://mlflow:5050
     command: ["python", "train.py", "--hpo", "--trials", "5"]
 

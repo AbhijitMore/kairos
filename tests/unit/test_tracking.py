@@ -9,7 +9,7 @@ import pytest
 pytestmark = pytest.mark.unit
 
 
-from src.kairos.tracking.metrics import evaluate_probabilistic_model, evaluate_policy
+from kairos.tracking.metrics import evaluate_probabilistic_model, evaluate_policy
 
 
 def test_evaluate_probabilistic_model():

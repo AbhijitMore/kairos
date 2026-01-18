@@ -5,9 +5,9 @@ import logging
 from typing import List
 from celery.result import AsyncResult
 
-from app.schemas import BatchInferenceRequest, PredictionResponse
-from app.dependencies import get_inference_deps, get_api_key, limiter
-from app.tasks import celery_app, predict_batch_task
+from kairos.api.schemas import BatchInferenceRequest, PredictionResponse
+from kairos.api.dependencies import get_inference_deps, get_api_key, limiter
+from kairos.api.tasks import celery_app, predict_batch_task
 from prometheus_client import Counter
 
 logger = logging.getLogger("kairos.api.prediction")

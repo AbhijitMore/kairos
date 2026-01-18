@@ -2,7 +2,7 @@ import pytest
 import pandas as pd
 import numpy as np
 import os
-from src.kairos.core.pipeline import KairosInferenceEngine
+from kairos.core.pipeline import KairosInferenceEngine
 
 # Define path relative to project root
 MODEL_PATH = "outputs/kairos_model"

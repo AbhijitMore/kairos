@@ -1,8 +1,8 @@
 from fastapi import HTTPException, Security
 from fastapi.security.api_key import APIKeyHeader
-from app.config import settings
-from src.kairos.core.pipeline import KairosInferenceEngine
-from src.kairos.core.policy import KairosPolicy
+from kairos.api.config import settings
+from kairos.core.pipeline import KairosInferenceEngine
+from kairos.core.policy import KairosPolicy
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 import os

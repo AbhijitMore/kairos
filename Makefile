@@ -29,7 +29,7 @@ lint:
 
 type-check:
 	@echo "🔎 Type checking with Mypy..."
-	mypy --explicit-package-bases src/kairos app
+	mypy --explicit-package-bases src/kairos
 
 # --- Execution ---
 train:
@@ -38,11 +38,11 @@ train:
 
 api:
 	@echo "📡 Starting FastAPI Service..."
-	PYTHONPATH=. uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+	PYTHONPATH=src uvicorn kairos.api.main:app --host 0.0.0.0 --port 8000 --reload
 
 web:
 	@echo "📊 Starting Dashboard (Flask)..."
-	PYTHONPATH=. python frontend/app.py
+	PYTHONPATH=src python src/kairos/web/app.py
 
 # --- Infrastructure ---
 docker-up:

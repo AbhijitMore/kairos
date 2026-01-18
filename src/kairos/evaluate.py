@@ -4,10 +4,10 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score
 
-from src.kairos.data.loader import load_adult_data
-from src.kairos.core.pipeline import KairosInferenceEngine
-from src.kairos.core.policy import KairosPolicy
-from src.kairos.core.calibration import compute_ece
+from kairos.data.loader import load_adult_data
+from kairos.core.pipeline import KairosInferenceEngine
+from kairos.core.policy import KairosPolicy
+from kairos.core.calibration import compute_ece
 
 
 def evaluate(model_path: str = "outputs/kairos_model", regression_gate: bool = True):

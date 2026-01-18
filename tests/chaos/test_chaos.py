@@ -18,7 +18,7 @@ import requests
 import time
 import os
 from unittest.mock import patch, MagicMock
-from app.main import app
+from kairos.api.main import app
 from fastapi.testclient import TestClient
 
 

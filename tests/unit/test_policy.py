@@ -4,7 +4,7 @@ pytestmark = pytest.mark.unit
 
 
 import numpy as np
-from src.kairos.core.policy import KairosPolicy, Action, compute_cost
+from kairos.core.policy import KairosPolicy, Action, compute_cost
 
 
 def test_kairos_policy_decisions():

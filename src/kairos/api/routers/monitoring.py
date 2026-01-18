@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Response
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
-from app.dependencies import APIState
+from kairos.api.dependencies import APIState
 
 router = APIRouter(tags=["monitoring"])
 

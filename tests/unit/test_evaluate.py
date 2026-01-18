@@ -11,7 +11,7 @@ pytestmark = pytest.mark.unit
 from unittest.mock import patch, MagicMock
 import numpy as np
 import pandas as pd
-from src.kairos.evaluate import evaluate
+from kairos.evaluate import evaluate
 
 
 @patch("src.kairos.evaluate.load_adult_data")

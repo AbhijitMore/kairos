@@ -7,9 +7,9 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
-from app.dependencies import APIState, limiter
-from app.routers import prediction, monitoring
-from src.kairos.utils.logging import setup_kairos_logger
+from kairos.api.dependencies import APIState, limiter
+from kairos.api.routers import prediction, monitoring
+from kairos.utils.logging import setup_kairos_logger
 
 # Standardized Logger
 logger = setup_kairos_logger("kairos.api", level=logging.INFO)

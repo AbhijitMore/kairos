@@ -10,9 +10,9 @@ import pytest
 pytestmark = pytest.mark.unit
 
 
-from src.kairos.data.transformers import AdultFeatureEngineer
-from src.kairos.core.pipeline import create_kairos_pipeline
-from src.kairos.utils.config_loader import load_config
+from kairos.data.transformers import AdultFeatureEngineer
+from kairos.core.pipeline import create_kairos_pipeline
+from kairos.utils.config_loader import load_config
 
 
 @pytest.fixture

@@ -11,8 +11,8 @@ import random
 # Add project root to path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from src.kairos.data.loader import load_adult_data  # noqa: E402
-from src.kairos.utils.privacy import mask_for_review  # noqa: E402
+from kairos.data.loader import load_adult_data  # noqa: E402
+from kairos.utils.privacy import mask_for_review  # noqa: E402
 
 app = Flask(__name__)
 

@@ -4,7 +4,7 @@ pytestmark = pytest.mark.unit
 
 
 import pandas as pd
-from src.kairos.data.transformers import AdultFeatureEngineer
+from kairos.data.transformers import AdultFeatureEngineer
 
 
 def test_adult_feature_engineer_logic():

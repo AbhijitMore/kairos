@@ -3,7 +3,7 @@ import pytest
 pytestmark = pytest.mark.unit
 
 
-from src.kairos.utils.privacy import (
+from kairos.utils.privacy import (
     generalize_age,
     generalize_marital_status,
     categorize_occupation,

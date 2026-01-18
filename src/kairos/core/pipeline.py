@@ -4,10 +4,10 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 from sklearn.impute import SimpleImputer
 
-from src.kairos.data.transformers import AdultFeatureEngineer
-from src.kairos.core.models import HybridEnsemble
+from kairos.data.transformers import AdultFeatureEngineer
+from kairos.core.models import HybridEnsemble
 
-from src.kairos.utils.logging import setup_kairos_logger
+from kairos.utils.logging import setup_kairos_logger
 
 logger = setup_kairos_logger("kairos.core.pipeline")
 

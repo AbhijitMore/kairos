@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 import os
 import pytest
-from src.kairos.core.pipeline import create_kairos_pipeline, KairosInferenceEngine
-from src.kairos.utils.config_loader import load_config
+from kairos.core.pipeline import create_kairos_pipeline, KairosInferenceEngine
+from kairos.utils.config_loader import load_config
 
 
 @pytest.fixture
@@ -87,7 +87,7 @@ def test_pipeline_serialization_reproducibility(trained_engine):
 
 def test_policy_logic():
     """Tests the decoupled policy engine."""
-    from src.kairos.core.policy import KairosPolicy
+    from kairos.core.policy import KairosPolicy
 
     policy = KairosPolicy(tau_low=0.2, tau_high=0.8)
 

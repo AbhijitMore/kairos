@@ -1,7 +1,7 @@
 import optuna
 import logging
 from sklearn.model_selection import cross_val_score
-from src.kairos.core.pipeline import create_kairos_pipeline
+from kairos.core.pipeline import create_kairos_pipeline
 
 logger = logging.getLogger(__name__)
 

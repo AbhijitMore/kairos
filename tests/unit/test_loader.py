@@ -6,7 +6,7 @@ pytestmark = pytest.mark.unit
 import pandas as pd
 from unittest.mock import patch, MagicMock
 import os
-from src.kairos.data.loader import download_uci_adult, load_adult_data, COLUMN_NAMES
+from kairos.data.loader import download_uci_adult, load_adult_data, COLUMN_NAMES
 
 
 @patch("src.kairos.data.loader.requests.get")

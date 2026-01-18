@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     mlflow_tracking_uri: str = "http://mlflow:5050"
 
     # App Config
-    model_dir: str = "outputs/kairos_model"
+    model_dir: str = "models/v1/kairos_model"
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

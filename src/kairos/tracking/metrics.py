@@ -10,7 +10,7 @@ from sklearn.metrics import (
     log_loss,
 )
 from typing import Dict, Any
-from src.kairos.core.policy import Action, KairosPolicy, compute_cost
+from kairos.core.policy import Action, KairosPolicy, compute_cost
 
 
 def evaluate_probabilistic_model(
