@@ -73,15 +73,16 @@ jobs:
       - name: Install validator
         run: pip install openapi-spec-validator
       - name: Validate OpenAPI Spec
-        run: openapi-spec-validator openapi.yaml
+        run: openapi-spec-validator docs/openapi.yaml
       - name: Verify Required Docs
         run: |
           test -f README.md
           test -f docs/ARCHITECTURE.md
           test -f docs/ONBOARDING.md
           test -f docs/RESEARCH.md
+          test -f docs/DEVELOPMENT.md
       - name: Markdown Link Check
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: "yes"
-          config-file: "mlc_config.json"
+          config-file: ".github/mlc_config.json"
