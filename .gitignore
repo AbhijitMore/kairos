@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
 .coverage
 .coverage.*
 coverage.xml
@@ -27,8 +28,12 @@ catboost_info/
 mlruns/
 outputs/*.log
 outputs/*.pkl
-# outputs/plots/ - Keeping this ignored, but moving key charts to docs/assets
 fake_data_dir/
+fake_dir/
+
+# Exploratory/Development (removed from repo)
+notebooks/
+scripts/
 
 # OS/IDE
 .DS_Store

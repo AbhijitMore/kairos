@@ -144,12 +144,34 @@ class KairosInferenceEngine:
     def load(cls, path: str):
         """
         Reconstructs the engine from stable components.
+        Includes compatibility layer for legacy models pickled with 'src.kairos' imports.
         """
         import joblib
         import os
+        import pickle
 
-        # 1. Load Preprocessor
-        preprocess_pipe = joblib.load(os.path.join(path, "preprocessor.joblib"))
+        # Custom unpickler to remap 'src.kairos' -> 'kairos' (for legacy models)
+        class LegacyUnpickler(pickle.Unpickler):
+            def find_class(self, module, name):
+                if module.startswith("src.kairos"):
+                    module = module.replace("src.kairos", "kairos")
+                return super().find_class(module, name)
+
+        # Helper function to load with fallback to legacy unpickler
+        def load_with_compat(filepath):
+            try:
+                # Try standard joblib loading first (for new models)
+                return joblib.load(filepath)
+            except (ModuleNotFoundError, AttributeError) as e:
+                # Fall back to legacy unpickler if module not found
+                if "src.kairos" in str(e) or "src" in str(e):
+                    logger.info(f"Loading legacy model format from {filepath}")
+                    with open(filepath, "rb") as f:
+                        return LegacyUnpickler(f).load()
+                raise
+
+        # 1. Load Preprocessor with compatibility
+        preprocess_pipe = load_with_compat(os.path.join(path, "preprocessor.joblib"))
 
         # 2. Load Ensemble Natively
         ensemble = HybridEnsemble.load(os.path.join(path, "ensemble"))
@@ -157,7 +179,7 @@ class KairosInferenceEngine:
         # Check version
         meta_path = os.path.join(path, "ensemble", "metadata.joblib")
         if os.path.exists(meta_path):
-            meta = joblib.load(meta_path)
+            meta = load_with_compat(meta_path)
             version = meta.get("version", "legacy")
             logger.info(f"🦅 Model Loaded: HybridEnsemble v{version}")
 
@@ -170,6 +192,6 @@ class KairosInferenceEngine:
         calibrator = None
         cal_path = os.path.join(path, "calibrator.joblib")
         if os.path.exists(cal_path):
-            calibrator = joblib.load(cal_path)
+            calibrator = load_with_compat(cal_path)
 
         return cls(full_pipeline, calibrator)

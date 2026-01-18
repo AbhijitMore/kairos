@@ -3,13 +3,13 @@ import argparse
 import os
 from sklearn.model_selection import train_test_split
 
-from src.kairos.utils.config_loader import load_config
-from src.kairos.data.loader import load_adult_data
-from src.kairos.core.pipeline import create_kairos_pipeline, KairosInferenceEngine
-from src.kairos.tracking.mlflow_manager import MLflowManager
-from src.kairos.tuning.optuna_hpo import OptunaHPO
-from src.kairos.tracking.metrics import evaluate_probabilistic_model
-from src.kairos.core.calibration import calibrate_model
+from kairos.utils.config_loader import load_config
+from kairos.data.loader import load_adult_data
+from kairos.core.pipeline import create_kairos_pipeline, KairosInferenceEngine
+from kairos.tracking.mlflow_manager import MLflowManager
+from kairos.tuning.optuna_hpo import OptunaHPO
+from kairos.tracking.metrics import evaluate_probabilistic_model
+from kairos.core.calibration import calibrate_model
 
 # Setup Logging
 logging.basicConfig(
@@ -66,7 +66,7 @@ def main(args):
     engine.save("outputs/kairos_model")
 
     # Generate and Save plots
-    from src.kairos.core.calibration import plot_reliability_diagram
+    from kairos.core.calibration import plot_reliability_diagram
 
     plot_reliability_diagram(
         y_test, cal_probs, save_path="outputs/calibration_curve.png"
