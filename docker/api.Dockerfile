@@ -16,10 +16,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # --- SOURCE STAGE ---
 FROM base AS source
 COPY src/ ./src/
-COPY configs/ ./configs/
+COPY config/ ./config/
 COPY app/ ./app/
 COPY frontend/ ./frontend/
-COPY main.py .
+COPY train.py .
 
 # --- API STAGE ---
 FROM source AS api
@@ -29,4 +29,4 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 # --- TRAINER STAGE ---
 FROM source AS trainer
 # Entrypoint for training/HPO
-ENTRYPOINT ["python", "main.py"]
+ENTRYPOINT ["python", "train.py"]

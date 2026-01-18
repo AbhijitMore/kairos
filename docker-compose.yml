@@ -26,6 +26,7 @@ services:
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./src:/app/src
+      - ./config:/app/config
     environment:
       - PYTHONPATH=/app
       - MLFLOW_TRACKING_URI=http://mlflow:5050
