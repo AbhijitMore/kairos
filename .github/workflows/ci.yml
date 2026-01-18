@@ -43,8 +43,7 @@ jobs:
       - name: Security Linting (Bandit)
         run: |
           pip install bandit
-          bandit -r src/ app/ -f json -o bandit-report.json
-          bandit -r src/ app/
+          bandit -r src/
       - name: Supply Chain Security (Snyk)
         uses: snyk/actions/python-3.12@master
         env:

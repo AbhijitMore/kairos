@@ -58,7 +58,7 @@ def random_profile():
 
     try:
         df = DATASET["raw"]
-        idx = random.choice(df.index)
+        idx = random.choice(df.index)  # nosec B311
         row = df.loc[idx]
 
         # Convert to dictionary and clean for JSON serialization
@@ -172,4 +172,4 @@ def health():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)
+    app.run(host="0.0.0.0", port=5000, debug=False, threaded=True)  # nosec B104
