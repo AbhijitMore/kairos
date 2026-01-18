@@ -1,3 +1,4 @@
+# Core dependencies (existing)
 pandas==2.2.3
 numpy==1.26.4
 scikit-learn==1.8.0
@@ -24,3 +25,17 @@ tqdm==4.66.4
 python-dotenv==1.0.1
 celery==5.4.0
 redis==5.2.1
+
+# Load Testing
+locust==2.32.4
+
+# Chaos Engineering & E2E Testing
+pytest-timeout==2.3.1
+pytest-xdist==3.6.1  # Parallel test execution
+selenium==4.27.1
+webdriver-manager==4.0.2  # Auto-manage browser drivers
+psutil==6.1.1  # Memory monitoring for chaos tests
+
+# Code Quality (optional but recommended)
+ruff==0.2.1
+bandit==1.8.0

@@ -4,8 +4,15 @@ __pycache__/
 *$py.class
 .pytest_cache/
 .coverage
+.coverage.*
 coverage.xml
 htmlcov/
+
+# Test Reports
+outputs/load_test_report.html
+outputs/load_test_results*.csv
+outputs/e2e_test_report.html
+.locust/
 
 # Environments
 .env
