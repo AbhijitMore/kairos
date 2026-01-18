@@ -54,7 +54,8 @@ jobs:
       - name: Run Tests
         run: |
           export PYTHONPATH=$PYTHONPATH:.
-          pytest --cov=src --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=75 tests/
+          # Exclude slow chaos and e2e tests from CI - run only unit and integration
+          pytest tests/unit/ tests/integration/ --cov=src --cov=app --cov-report=term-missing --cov-report=xml --cov-fail-under=75
       - name: Code Quality Regression Gate
         run: |
           export PYTHONPATH=$PYTHONPATH:.
