@@ -103,6 +103,6 @@ pre-commit install
 
 ## 6. Resources
 
-- [Architecture Overview](ARCHITECTURE.md)
-- [Research & Methodology](RESEARCH.md)
-- [API Specification](openapi.yaml)
+- [Architecture Overview](./ARCHITECTURE.md)
+- [Research & Methodology](./RESEARCH.md)
+- [API Specification](./openapi.yaml)
