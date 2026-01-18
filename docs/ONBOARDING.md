@@ -105,4 +105,4 @@ pre-commit install
 
 - [Architecture Overview](ARCHITECTURE.md)
 - [Research & Methodology](RESEARCH.md)
-- [API Specification](../openapi.yaml)
+- [API Specification](openapi.yaml)

@@ -9,4 +9,4 @@ repos:
     rev: 0.7.1
     hooks:
       - id: openapi-spec-validator
-        files: ^openapi\.yaml$
+        files: ^docs/openapi\.yaml$
