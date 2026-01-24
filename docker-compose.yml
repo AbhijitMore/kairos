@@ -21,13 +21,15 @@ services:
       - mlflow
       - redis
     ports:
-      - "8000:8000"
+      - "8001:8000"
     volumes:
       - ./models:/app/models
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./src:/app/src
       - ./config:/app/config
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/app/src
       - MLFLOW_TRACKING_URI=http://mlflow:5050
@@ -53,6 +55,8 @@ services:
       - ./outputs:/app/outputs
       - ./data:/app/data
       - ./src:/app/src
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/app/src
       - MLFLOW_TRACKING_URI=http://mlflow:5050
@@ -65,12 +69,14 @@ services:
       dockerfile: docker/api.Dockerfile
       target: api
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
       - ./models:/app/models
       - ./outputs:/app/outputs
       - ./src:/app/src
       - ./data:/app/data
+    env_file:
+      - .env
     environment:
       - PYTHONPATH=/app/src
       - API_URL=http://api:8000/api/v1/predict
@@ -102,8 +108,31 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/rules.yml:/etc/prometheus/rules.yml
     ports:
       - "9090:9090"
+    depends_on:
+      - alertmanager
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    volumes:
+      - ./docker/alertmanager.yml:/etc/alertmanager/alertmanager.yml.template
+    ports:
+      - "9093:9093"
+    environment:
+      - ALERT_EMAIL_TO=${ALERT_EMAIL_TO}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        sed -e "s|\$${ALERT_EMAIL_TO}|$$ALERT_EMAIL_TO|g" \
+            -e "s|\$${SMTP_USER}|$$SMTP_USER|g" \
+            -e "s|\$${SMTP_PASSWORD}|$$SMTP_PASSWORD|g" \
+            /etc/alertmanager/alertmanager.yml.template > /etc/alertmanager/alertmanager.yml && \
+        /bin/alertmanager --config.file=/etc/alertmanager/alertmanager.yml --storage.path=/alertmanager
 
   grafana:
     image: grafana/grafana:latest

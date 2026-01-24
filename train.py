@@ -4,7 +4,7 @@ import os
 from sklearn.model_selection import train_test_split
 
 from kairos.utils.config_loader import load_config
-from kairos.data.loader import load_adult_data
+from kairos.data.loader import load_adult_data, load_home_credit_data
 from kairos.core.pipeline import create_kairos_pipeline, KairosInferenceEngine
 from kairos.tracking.mlflow_manager import MLflowManager
 from kairos.tuning.optuna_hpo import OptunaHPO
@@ -20,12 +20,21 @@ logger = logging.getLogger("KAIROS-MAIN")
 
 def main(args):
     config = load_config()
-    mlflow_mgr = MLflowManager(config["project"]["experiment_name"])
+    experiment_name = f"{config['project']['experiment_name']}-{args.dataset}"
+    mlflow_mgr = MLflowManager(experiment_name)
 
-    logger.info(">>> Loading Raw Data")
-    df = load_adult_data()
-    X = df.drop(columns=["target", "income", "fnlwgt", "education"])
-    y = df["target"]
+    logger.info(f">>> Loading Raw Data for: {args.dataset}")
+    if args.dataset == "adult":
+        df = load_adult_data()
+        X = df.drop(columns=["target", "income", "fnlwgt", "education"])
+        y = df["target"]
+    elif args.dataset == "home_credit":
+        df = load_home_credit_data()
+        # Home Credit specific drops (keep features defined in pipeline.py)
+        X = df.drop(columns=["target", "TARGET"])
+        y = df["target"]
+    else:
+        raise ValueError(f"Unknown dataset: {args.dataset}")
 
     X_train_full, X_test, y_train_full, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
@@ -42,8 +51,8 @@ def main(args):
         for k, v in best_params.items():
             config["model"]["lgbm_params"][k] = v
 
-    logger.info(">>> Initializing Unified Pipeline")
-    pipeline = create_kairos_pipeline(config)
+    logger.info(f">>> Initializing Unified Pipeline for {args.dataset}")
+    pipeline = create_kairos_pipeline(config, dataset_type=args.dataset)
 
     logger.info(">>> Training Pipeline (Pre-processing + Ensemble)")
     # Note: X_train is RAW data here. Preprocessing happens INSIDE fitting.
@@ -62,14 +71,15 @@ def main(args):
     logger.info(f"Final Metrics: {metrics}")
 
     logger.info(">>> Saving Robust ML Artifacts")
-    os.makedirs("outputs", exist_ok=True)
-    engine.save("outputs/kairos_model")
+    output_path = f"outputs/{args.dataset}_model"
+    os.makedirs(output_path, exist_ok=True)
+    engine.save(output_path)
 
     # Generate and Save plots
     from kairos.core.calibration import plot_reliability_diagram
 
     plot_reliability_diagram(
-        y_test, cal_probs, save_path="outputs/calibration_curve.png"
+        y_test, cal_probs, save_path=f"outputs/{args.dataset}_calibration_curve.png"
     )
 
     # Log to MLflow
@@ -81,18 +91,25 @@ def main(args):
             "log_loss": metrics["log_loss"],
         },
         model_pipeline=pipeline,
-        artifacts={"calibration_curve": "outputs/calibration_curve.png"}
-        if os.path.exists("outputs/calibration_curve.png")
+        artifacts={"calibration_curve": f"outputs/{args.dataset}_calibration_curve.png"}
+        if os.path.exists(f"outputs/{args.dataset}_calibration_curve.png")
         else None,
     )
 
     logger.info(
-        ">>> Pipeline Modernization Complete. Artifacts stored in outputs/ and MLflow."
+        f">>> {args.dataset.upper()} Pipeline Modernization Complete. Artifacts in {output_path}"
     )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="KAIROS Modernized Pipeline")
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        choices=["adult", "home_credit"],
+        default="adult",
+        help="Dataset to train on",
+    )
     parser.add_argument(
         "--hpo", action="store_true", help="Run hyperparameter optimization"
     )

@@ -1,510 +1,621 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>KAIROS | Precision Decision Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg-dark: #0f172a;
-            --surface: #1e293b;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.4);
-            --emerald: #10b981;
-            --rose: #f43f5e;
-            --amber: #f59e0b;
-            --slate-400: #94a3b8;
-            --slate-300: #cbd5e1;
-            --slate-200: #e2e8f0;
-        }
+      :root {
+        --bg-dark: #0f172a;
+        --surface: #1e293b;
+        --accent: #3b82f6;
+        --accent-glow: rgba(59, 130, 246, 0.4);
+        --emerald: #10b981;
+        --rose: #f43f5e;
+        --amber: #f59e0b;
+        --slate-400: #94a3b8;
+        --slate-300: #cbd5e1;
+        --slate-200: #e2e8f0;
+      }
 
-        body {
-            background-color: var(--bg-dark);
-            color: white;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+      body {
+        background-color: var(--bg-dark);
+        color: white;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
 
-        /* --- Glassmorphism Elements --- */
-        .glass-card {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 24px;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        }
+      /* --- Glassmorphism Elements --- */
+      .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        box-shadow:
+          0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1);
+      }
 
-        /* --- Hero Section --- */
-        .hero-banner {
-            padding: 0.5rem 0 0.25rem 0;
-            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.1) 0%, transparent 60%);
-        }
+      /* --- Hero Section --- */
+      .hero-banner {
+        padding: 0.5rem 0 0.25rem 0;
+        background: radial-gradient(
+          circle at 50% 0%,
+          rgba(59, 130, 246, 0.1) 0%,
+          transparent 60%
+        );
+      }
 
-        .logo-text {
-            font-weight: 800;
-            letter-spacing: -2px;
-            font-size: 1.5rem;
-            background: linear-gradient(to right, #60a5fa, #3b82f6);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-background-fill-color: transparent;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 0.1rem;
-        }
+      .logo-text {
+        font-weight: 800;
+        letter-spacing: -2px;
+        font-size: 1.5rem;
+        background: linear-gradient(to right, #60a5fa, #3b82f6);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-background-fill-color: transparent;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.1rem;
+      }
 
-        .lead {
-            font-size: 0.75rem;
-            margin-bottom: 0.5rem;
-        }
+      .lead {
+        font-size: 0.75rem;
+        margin-bottom: 0.5rem;
+      }
 
-        .status-badge {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--emerald);
-            border: 1px solid rgba(16, 185, 129, 0.2);
-            padding: 0.4rem 1rem;
-            border-radius: 99px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+      .status-badge {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--emerald);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        padding: 0.4rem 1rem;
+        border-radius: 99px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background: var(--emerald);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--emerald);
-            animation: pulse 2s infinite;
-        }
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--emerald);
+        border-radius: 50%;
+        box-shadow: 0 0 10px var(--emerald);
+        animation: pulse 2s infinite;
+      }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
-            100% { transform: scale(1); opacity: 1; }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 1;
         }
+        50% {
+          transform: scale(1.5);
+          opacity: 0.5;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
 
-        /* --- Buttons --- */
-        .btn-kairos {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            font-weight: 700;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 6px -1px var(--accent-glow);
-        }
+      /* --- Buttons --- */
+      .btn-kairos {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        font-weight: 700;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 6px -1px var(--accent-glow);
+      }
 
-        .btn-kairos:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px var(--accent-glow);
-            background: #2563eb;
-            color: white;
-        }
+      .btn-kairos:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px var(--accent-glow);
+        background: #2563eb;
+        color: white;
+      }
 
-        .btn-outline-kairos {
-            background: transparent;
-            color: var(--slate-200);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 1rem 2rem;
-            border-radius: 16px;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
+      .btn-outline-kairos {
+        background: transparent;
+        color: var(--slate-200);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
 
-        .btn-outline-kairos:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.3);
-            color: white;
-        }
+      .btn-outline-kairos:hover {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.3);
+        color: white;
+      }
 
-        /* --- Panels --- */
-        .panel-title {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--slate-400);
-            margin-bottom: 0.5rem;
-        }
+      /* --- Panels --- */
+      .panel-title {
+        font-size: 0.65rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--slate-400);
+        margin-bottom: 0.5rem;
+      }
 
-        /* --- Feature Tags --- */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 6px;
-            max-height: 380px;
-            overflow-y: auto;
-            padding-right: 6px;
-        }
-        
-        .feature-grid::-webkit-scrollbar {
-            width: 4px;
-        }
-        .feature-grid::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-        }
+      /* --- Feature Tags --- */
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+        gap: 6px;
+        max-height: 380px;
+        overflow-y: auto;
+        padding-right: 6px;
+      }
 
-        .feature-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 8px;
-            border-radius: 10px;
-        }
+      .feature-grid::-webkit-scrollbar {
+        width: 4px;
+      }
+      .feature-grid::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
 
-        .feature-label {
-            font-size: 0.55rem;
-            color: var(--slate-400);
-            display: block;
-            margin-bottom: 1px;
-        }
+      .feature-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 8px;
+        border-radius: 10px;
+      }
 
-        .feature-val {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--slate-200);
-        }
+      .feature-label {
+        font-size: 0.55rem;
+        color: var(--slate-400);
+        display: block;
+        margin-bottom: 1px;
+      }
 
-        .feature-protected {
-            color: var(--amber) !important;
-            font-style: italic;
-        }
+      .feature-val {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--slate-200);
+      }
 
-        /* --- Decision Result --- */
-        .decision-hero {
-            padding: 3rem 1.5rem;
-            text-align: center;
-        }
+      .feature-protected {
+        color: var(--amber) !important;
+        font-style: italic;
+      }
 
-        .decision-ring {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            margin: 0 auto 2rem auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: rgba(0,0,0,0.2);
-            border: 3px solid rgba(255,255,255,0.05);
-        }
+      /* --- Decision Result --- */
+      .decision-hero {
+        padding: 3rem 1.5rem;
+        text-align: center;
+      }
 
-        .decision-text {
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            letter-spacing: 1px;
-        }
+      .decision-ring {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        margin: 0 auto 2rem auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: rgba(0, 0, 0, 0.2);
+        border: 3px solid rgba(255, 255, 255, 0.05);
+      }
 
-        .decision-sub {
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
-            color: var(--slate-400);
-        }
+      .decision-text {
+        font-size: 2rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        letter-spacing: 1px;
+      }
 
-        .status-ACCEPT { color: var(--emerald); border-color: var(--emerald); }
-        .status-REJECT { color: var(--rose); border-color: var(--rose); }
-        .status-ABSTAIN { color: var(--amber); border-color: var(--amber); }
+      .decision-sub {
+        font-size: 0.9rem;
+        margin-bottom: 2rem;
+        color: var(--slate-400);
+      }
 
-        /* --- Progress Bars --- */
-        .stat-label {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: var(--slate-400);
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 4px;
-        }
+      .status-ACCEPT {
+        color: var(--emerald);
+        border-color: var(--emerald);
+      }
+      .status-REJECT {
+        color: var(--rose);
+        border-color: var(--rose);
+      }
+      .status-ABSTAIN {
+        color: var(--amber);
+        border-color: var(--amber);
+      }
 
-        .k-progress {
-            height: 6px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 0.75rem;
-        }
+      /* --- Progress Bars --- */
+      .stat-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        color: var(--slate-400);
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 4px;
+      }
 
-        .k-progress-bar {
-            height: 100%;
-            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+      .k-progress {
+        height: 6px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 3px;
+        overflow: hidden;
+        margin-bottom: 0.75rem;
+      }
 
-        /* --- State Management (Absolute Positioning) --- */
-        .state-container {
-            position: relative;
-            flex-grow: 1;
-        }
+      .k-progress-bar {
+        height: 100%;
+        transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-        .state-element {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+      /* --- State Management (Absolute Positioning) --- */
+      .state-container {
+        position: relative;
+        flex-grow: 1;
+      }
 
-        [data-state="empty"] .state-empty,
-        [data-state="loading"] .state-loading,
-        [data-state="result"] .state-result {
-            opacity: 1;
-            visibility: visible;
-            z-index: 10;
-        }
+      .state-element {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.3s,
+          visibility 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
 
-        .state-result {
-            display: block !important;
-        }
+      [data-state="empty"] .state-empty,
+      [data-state="loading"] .state-loading,
+      [data-state="result"] .state-result {
+        opacity: 1;
+        visibility: visible;
+        z-index: 10;
+      }
 
-        /* --- Logic Card --- */
-        .logic-card {
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 12px;
-            padding: 0.75rem;
-            font-size: 0.7rem;
-        }
+      .state-result {
+        display: block !important;
+      }
 
-        .glass-card {
-            padding: 0.75rem !important;
-        }
+      /* --- Logic Card --- */
+      .logic-card {
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 0.75rem;
+        font-size: 0.7rem;
+      }
 
-        .container {
-            padding-bottom: 1rem !important;
-        }
+      .glass-card {
+        padding: 0.75rem !important;
+      }
 
+      .container {
+        padding-bottom: 1rem !important;
+      }
     </style>
-</head>
-<body>
-
-<div class="hero-banner">
-    <div class="container text-center">
+  </head>
+  <body>
+    <div class="hero-banner">
+      <div class="container text-center">
         <h1 class="logo-text">KAIROS</h1>
         <p class="lead text-slate-400 col-md-8 mx-auto">
-            Risk-Aware Decision Intelligence using Deep Diversity Ensembles. 
-            Automating 81% of operations with 97% decision precision.
+          Risk-Aware Decision Intelligence using Deep Diversity Ensembles.
+          Automating 81% of operations with 97% decision precision.
         </p>
+      </div>
     </div>
-</div>
 
-<div class="container pb-5">
-    <div class="row g-4">
+    <div class="container pb-5">
+      <div class="row g-4">
         <!-- Left: Input/Profile -->
         <div class="col-lg-5">
-            <div class="glass-card p-4 h-100">
-                <div class="panel-title">Applicant Simulation</div>
-                
-                <div class="d-flex gap-3 mb-4">
-                    <button class="btn btn-kairos flex-grow-1" id="genBtn" onclick="generateProfile()">
-                        Generate Random Case
-                    </button>
-                    <button class="btn btn-outline-kairos" id="predictBtn" onclick="predict()" disabled>
-                        Analyze
-                    </button>
-                </div>
+          <div class="glass-card p-4 h-100">
+            <div class="panel-title">Applicant Simulation</div>
 
-                <div id="applicantInfo" style="display: none;">
-                    <div class="stat-label">
-                        <span>PRE-PROCESSED ATTRIBUTES</span>
-                        <span class="badge bg-primary" id="groundTruthTag">?</span>
-                    </div>
-                    <div class="feature-grid mt-3" id="featureGrid">
-                        <!-- Dynamic Features -->
-                    </div>
-                </div>
-
-                <div id="welcomeState" class="text-center py-5">
-                    <div style="font-size: 4rem; opacity: 0.1;">🧬</div>
-                    <p class="text-slate-400">Initialize the engine by generating a synthetic applicant profile.</p>
-                </div>
+            <div class="mb-4">
+              <label class="panel-title d-block mb-2"
+                >Select Domain Engine</label
+              >
+              <div class="input-group">
+                <select
+                  class="form-select bg-dark text-white border-white-10"
+                  id="datasetSelect"
+                  onchange="switchDataset()"
+                >
+                  <option value="adult" selected>
+                    Public / Academic (Census Data)
+                  </option>
+                  <option value="home_credit">
+                    Enterprise / Banking (Credit Risk)
+                  </option>
+                </select>
+              </div>
             </div>
+
+            <div class="d-flex gap-3 mb-4">
+              <button
+                class="btn btn-kairos flex-grow-1"
+                id="genBtn"
+                onclick="generateProfile()"
+              >
+                Generate Random Case
+              </button>
+              <button
+                class="btn btn-outline-kairos"
+                id="predictBtn"
+                onclick="predict()"
+                disabled
+              >
+                Analyze
+              </button>
+            </div>
+
+            <div id="applicantInfo" style="display: none">
+              <div class="stat-label">
+                <span>PRE-PROCESSED ATTRIBUTES</span>
+                <span class="badge bg-primary" id="groundTruthTag">?</span>
+              </div>
+              <div class="feature-grid mt-3" id="featureGrid">
+                <!-- Dynamic Features -->
+              </div>
+            </div>
+
+            <div id="welcomeState" class="text-center py-5">
+              <div style="font-size: 4rem; opacity: 0.1">🧬</div>
+              <p class="text-slate-400">
+                Initialize the engine by generating a synthetic applicant
+                profile.
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- Right: Results -->
         <div class="col-lg-7">
-            <div class="glass-card h-100 d-flex flex-column" id="resultsPanel" data-state="empty">
-                <div class="p-4 border-bottom border-white-5 opacity-50">
-                    <div class="panel-title mb-0">Decision Analytics</div>
-                </div>
-
-                <div class="state-container">
-                    <div id="loading" class="state-element state-loading">
-                        <div class="text-center text-accent">
-                            <div class="spinner-border mb-3" role="status"></div>
-                            <div class="fw-bold">Computing Ensemble Weights...</div>
-                        </div>
-                    </div>
-
-                    <div id="emptyResult" class="state-element state-empty">
-                        <div class="text-center opacity-20">
-                            <div style="font-size: 5rem;">⚡</div>
-                            <p>Awaiting Inference Execution</p>
-                        </div>
-                    </div>
-
-                    <div id="resultContent" class="state-element state-result decision-hero">
-                        <div class="decision-ring" id="decisionRing">
-                            <div id="decisionIcon" style="font-size: 2.5rem;"></div>
-                        </div>
-                        <h2 class="decision-text" id="decisionText">---</h2>
-                        <p class="text-slate-400 decision-sub" id="decisionSub">Automated Decision Intelligence</p>
-                    </div>
-                </div>
+          <div
+            class="glass-card h-100 d-flex flex-column"
+            id="resultsPanel"
+            data-state="empty"
+          >
+            <div class="p-4 border-bottom border-white-5 opacity-50">
+              <div class="panel-title mb-0">Decision Analytics</div>
             </div>
+
+            <div class="state-container">
+              <div id="loading" class="state-element state-loading">
+                <div class="text-center text-accent">
+                  <div class="spinner-border mb-3" role="status"></div>
+                  <div class="fw-bold">Computing Ensemble Weights...</div>
+                </div>
+              </div>
+
+              <div id="emptyResult" class="state-element state-empty">
+                <div class="text-center opacity-20">
+                  <div style="font-size: 5rem">⚡</div>
+                  <p>Awaiting Inference Execution</p>
+                </div>
+              </div>
+
+              <div
+                id="resultContent"
+                class="state-element state-result decision-hero"
+              >
+                <div class="decision-ring" id="decisionRing">
+                  <div id="decisionIcon" style="font-size: 2.5rem"></div>
+                </div>
+                <h2 class="decision-text" id="decisionText">---</h2>
+                <p class="text-slate-400 decision-sub" id="decisionSub">
+                  Automated Decision Intelligence
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
-</div>
 
-<script>
-    let currentFeatures = null;
+    <script>
+      let currentFeatures = null;
+      let currentDataset = "adult";
 
-    async function generateProfile() {
-        const btn = document.getElementById('genBtn');
-        const welcome = document.getElementById('welcomeState');
-        const info = document.getElementById('applicantInfo');
-        const grid = document.getElementById('featureGrid');
-        const truthTag = document.getElementById('groundTruthTag');
+      async function switchDataset() {
+        const ds = document.getElementById("datasetSelect").value;
+        const resp = await fetch("/switch_dataset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ dataset: ds }),
+        });
+        const data = await resp.json();
+        if (data.status === "success") {
+          currentDataset = data.current;
+          // Reset UI
+          document.getElementById("applicantInfo").style.display = "none";
+          document.getElementById("welcomeState").style.display = "block";
+          document.getElementById("predictBtn").disabled = true;
+          showState("empty");
+        }
+      }
+
+      async function generateProfile() {
+        const btn = document.getElementById("genBtn");
+        const welcome = document.getElementById("welcomeState");
+        const info = document.getElementById("applicantInfo");
+        const grid = document.getElementById("featureGrid");
+        const truthTag = document.getElementById("groundTruthTag");
 
         btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Simulating...';
+        btn.innerHTML =
+          '<span class="spinner-border spinner-border-sm"></span> Simulating...';
 
         try {
-            const resp = await fetch('/random_profile');
-            const data = await resp.json();
+          const resp = await fetch("/random_profile");
+          const data = await resp.json();
 
-            if (data.error) throw new Error(data.error);
+          if (data.error) throw new Error(data.error);
 
-            currentFeatures = data.raw_features;
-            
-            // Build Feature Grid using MASKED features for privacy
-            grid.innerHTML = '';
-            Object.entries(data.features_masked).forEach(([key, val]) => {
-                const item = document.createElement('div');
-                item.className = 'feature-item';
-                
-                const isProtected = val === '[PROTECTED]';
-                const displayVal = isProtected ? '🔒 Protected' : val;
-                const valClass = isProtected ? 'feature-val feature-protected' : 'feature-val';
-                
-                item.innerHTML = `
+          currentFeatures = data.raw_features;
+
+          // Build Feature Grid using MASKED features for privacy
+          grid.innerHTML = "";
+          Object.entries(data.features_masked).forEach(([key, val]) => {
+            const item = document.createElement("div");
+            item.className = "feature-item";
+
+            const isProtected = val === "[PROTECTED]";
+            const displayVal = isProtected ? "🔒 Protected" : val;
+            const valClass = isProtected
+              ? "feature-val feature-protected"
+              : "feature-val";
+
+            item.innerHTML = `
                     <span class="feature-label">${key.toUpperCase()}</span>
                     <span class="${valClass}">${displayVal}</span>
                 `;
-                grid.appendChild(item);
-            });
+            grid.appendChild(item);
+          });
 
-            // Ground Truth
-            truthTag.className = data.ground_truth === 1 ? 'badge bg-success' : 'badge bg-secondary';
-            truthTag.innerText = data.ground_truth === 1 ? 'HIGH INCOME (>50K)' : 'LOW INCOME (≤50K)';
+          // Ground Truth - Dynamic based on dataset
+          truthTag.className =
+            data.ground_truth === 1 ? "badge bg-success" : "badge bg-secondary";
+          if (data.dataset === "home_credit") {
+            truthTag.innerText =
+              data.ground_truth === 1
+                ? "DEFAULT RISK (HIGH)"
+                : "STABLE (LOW RISK)";
+          } else {
+            truthTag.innerText =
+              data.ground_truth === 1
+                ? "HIGH INCOME (>50K)"
+                : "LOW INCOME (≤50K)";
+          }
 
-            welcome.style.display = 'none';
-            info.style.display = 'block';
-            document.getElementById('predictBtn').disabled = false;
-            
-            // Reset results
-            showState('empty');
+          welcome.style.display = "none";
+          info.style.display = "block";
+          document.getElementById("predictBtn").disabled = false;
 
+          // Reset results
+          showState("empty");
         } catch (e) {
-            if (e.message.includes('503')) {
-                alert("KAIROS Engine is still warming up. This takes ~15s on first start. Please retry.");
-            } else {
-                alert("KAIROS API Error: " + e.message);
-            }
+          if (e.message.includes("503")) {
+            alert(
+              "KAIROS Engine is still warming up. This takes ~15s on first start. Please retry.",
+            );
+          } else {
+            alert("KAIROS API Error: " + e.message);
+          }
         } finally {
-            btn.disabled = false;
-            btn.innerHTML = 'Generate Random Case';
+          btn.disabled = false;
+          btn.innerHTML = "Generate Random Case";
         }
-    }
+      }
 
-    function showState(state) {
-        document.getElementById('resultsPanel').setAttribute('data-state', state);
-    }
+      function showState(state) {
+        document
+          .getElementById("resultsPanel")
+          .setAttribute("data-state", state);
+      }
 
-    async function predict() {
+      async function predict() {
         if (!currentFeatures) return;
 
-        const btn = document.getElementById('predictBtn');
+        const btn = document.getElementById("predictBtn");
         btn.disabled = true;
-        showState('loading');
+        showState("loading");
 
         try {
-            const resp = await fetch('/predict', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ raw_features: currentFeatures })
-            });
-            const data = await resp.json();
+          const resp = await fetch("/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              raw_features: currentFeatures,
+              dataset: currentDataset,
+            }),
+          });
+          const data = await resp.json();
 
-            if (data.error) throw new Error(data.error);
+          if (data.error) throw new Error(data.error);
 
-            // Update UI
-            updateDecisionUI(data);
-            showState('result');
-
+          // Update UI
+          updateDecisionUI(data);
+          showState("result");
         } catch (e) {
-            alert(e.message);
-            showState('empty');
+          alert(e.message);
+          showState("empty");
         } finally {
-            btn.disabled = false;
+          btn.disabled = false;
         }
-    }
+      }
 
-    function updateDecisionUI(data) {
-        const ring = document.getElementById('decisionRing');
-        const icon = document.getElementById('decisionIcon');
-        const text = document.getElementById('decisionText');
-        const sub = document.getElementById('decisionSub');
+      function updateDecisionUI(data) {
+        const ring = document.getElementById("decisionRing");
+        const icon = document.getElementById("decisionIcon");
+        const text = document.getElementById("decisionText");
+        const sub = document.getElementById("decisionSub");
 
         // Map technical decisions to user-friendly labels
         const decisionMap = {
-            'ACCEPT': {
-                label: 'APPROVED',
-                subtitle: 'Application meets automated approval criteria',
-                icon: '🛡️',
-                class: 'ACCEPT'
-            },
-            'REJECT': {
-                label: 'DECLINED',
-                subtitle: 'Application does not meet minimum requirements',
-                icon: '🛑',
-                class: 'REJECT'
-            },
-            'ABSTAIN': {
-                label: 'NEEDS REVIEW',
-                subtitle: 'Borderline case - requires human evaluation',
-                icon: '⚖️',
-                class: 'ABSTAIN'
-            }
+          ACCEPT: {
+            label: "APPROVED",
+            subtitle: "Application meets automated approval criteria",
+            icon: "🛡️",
+            class: "ACCEPT",
+          },
+          REJECT: {
+            label: "DECLINED",
+            subtitle: "Application does not meet minimum requirements",
+            icon: "🛑",
+            class: "REJECT",
+          },
+          ABSTAIN: {
+            label: "NEEDS REVIEW",
+            subtitle: "Borderline case - requires human evaluation",
+            icon: "⚖️",
+            class: "ABSTAIN",
+          },
         };
 
-        const decision = decisionMap[data.decision] || decisionMap['ABSTAIN'];
+        const decision = decisionMap[data.decision] || decisionMap["ABSTAIN"];
 
         // Reset classes
-        ring.className = 'decision-ring';
-        ring.classList.add('status-' + decision.class);
-        
+        ring.className = "decision-ring";
+        ring.classList.add("status-" + decision.class);
+
         text.innerText = decision.label;
-        text.className = 'decision-text status-' + decision.class;
-        
+        text.className = "decision-text status-" + decision.class;
+
         sub.innerText = decision.subtitle;
         icon.innerText = decision.icon;
-    }
-</script>
-
-</body>
+      }
+    </script>
+  </body>
 </html>

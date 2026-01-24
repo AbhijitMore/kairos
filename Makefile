@@ -1,7 +1,7 @@
 # KAIROS Development Makefile
 # Standardized commands for FAANG-grade workflow
 
-.PHONY: setup test test-unit test-integration lint type-check train api web clean docker-up docker-down
+.PHONY: setup test test-unit test-integration lint type-check train api web clean docker-up docker-down alert-check
 
 # --- Installation ---
 setup:
@@ -11,7 +11,7 @@ setup:
 # --- Testing ---
 test:
 	@echo "🧪 Running full test suite..."
-	./scripts/run_tests.sh
+	PYTHONPATH=src pytest tests/unit tests/integration
 
 test-unit:
 	@echo "📦 Running unit tests..."
@@ -29,7 +29,11 @@ lint:
 
 type-check:
 	@echo "🔎 Type checking with Mypy..."
-	mypy --explicit-package-bases src/kairos
+	PYTHONPATH=src mypy --explicit-package-bases src/kairos
+
+alert-check:
+	@echo "🛡️ Verifying AlertManager Rules..."
+	python scripts/verify_alerts.py
 
 # --- Execution ---
 train:
@@ -38,11 +42,11 @@ train:
 
 api:
 	@echo "📡 Starting FastAPI Service..."
-	PYTHONPATH=src uvicorn kairos.api.main:app --host 0.0.0.0 --port 8000 --reload
+	PYTHONPATH=src uvicorn kairos.api.main:app --host 0.0.0.0 --port 8001 --reload
 
 web:
 	@echo "📊 Starting Dashboard (Flask)..."
-	PYTHONPATH=src python src/kairos/web/app.py
+	PYTHONPATH=src API_URL=http://localhost:8001/api/v1/predict flask --app src/kairos/web/app.py run --port 5001
 
 # --- Infrastructure ---
 docker-up:

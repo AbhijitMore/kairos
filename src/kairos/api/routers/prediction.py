@@ -6,7 +6,7 @@ from typing import List
 from celery.result import AsyncResult
 
 from kairos.api.schemas import BatchInferenceRequest, PredictionResponse
-from kairos.api.dependencies import get_inference_deps, get_api_key, limiter
+from kairos.api.dependencies import APIState, get_api_key, limiter
 from kairos.api.tasks import celery_app, predict_batch_task
 from prometheus_client import Counter
 
@@ -15,7 +15,9 @@ router = APIRouter(prefix="/predict", tags=["prediction"])
 
 # Custom Metrics
 DECISION_COUNTER = Counter(
-    "kairos_decisions_total", "Total number of decisions made by KAIROS", ["decision"]
+    "kairos_decisions_total",
+    "Total number of decisions made by KAIROS",
+    ["decision", "dataset"],
 )
 
 
@@ -30,13 +32,12 @@ def sanitize_val(v):
 async def predict(
     request: Request,
     inference_request: BatchInferenceRequest,
-    deps=Depends(get_inference_deps),
     _api_key: str = Depends(get_api_key),
 ):
     """
     Executes decision logic for a batch of instances.
     """
-    engine, policy = deps
+    engine, policy = APIState.get_engine(inference_request.dataset)
 
     try:
         X = pd.DataFrame([inst.model_dump() for inst in inference_request.instances])
@@ -56,7 +57,9 @@ async def predict(
                     cost_risk=float(uncertainty * 100),
                 )
             )
-            DECISION_COUNTER.labels(decision=decision).inc()
+            DECISION_COUNTER.labels(
+                decision=decision, dataset=inference_request.dataset
+            ).inc()
 
         return results
 
@@ -74,7 +77,7 @@ async def predict_batch_async(
     Kicks off an asynchronous batch inference task.
     """
     records = [inst.model_dump() for inst in inference_request.instances]
-    task = predict_batch_task.delay(records)
+    task = predict_batch_task.delay(records, dataset=inference_request.dataset)
 
     return {
         "task_id": task.id,

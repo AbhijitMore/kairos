@@ -46,8 +46,9 @@ We use a `Makefile` to unify development tasks.
 
 ## 📁 Directory Structure
 
-- `src/kairos/core`: The brain of the system (modeling, pipeline, policy).
-- `app/`: FastAPI infrastructure and API routes.
-- `frontend/`: Flask-based decision dashboard.
-- `scripts/`: Operational tools (tests, deployment, installation).
-- `tests/`: Multi-tier testing suite (Unit, Integration, Chaos, Load, E2E).
+- `src/kairos/api`: Multi-Engine FastAPI node & schema contracts.
+- `src/kairos/web`: Decision Dashboard (Flask/CSS).
+- `src/kairos/core`: Decision logic, hybrid ensembles, and calibration.
+- `src/kairos/data`: Feature engineering and loaders (UCI Adult/Home Credit).
+- `scripts/`: Operational tools (alerts verification, test scripts).
+- `tests/`: Multi-tier testing suite (Metric Integration, Unit).

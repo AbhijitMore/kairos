@@ -78,10 +78,14 @@ def plot_calibration_curve(
 
 
 def plot_confusion_matrix(
-    y_true: np.ndarray, y_prob: np.ndarray, tau_low: float, tau_high: float
+    y_true: np.ndarray,
+    y_prob: np.ndarray,
+    tau_low: float,
+    tau_high: float,
+    xticks: list[str] = None,
 ):
     """
-    Visualizes the 3x2 decision matrix.
+    Visualizes the 3x2 decision matrix with customizable labels.
     """
     policy = KairosPolicy(tau_low, tau_high)
     preds = policy.predict_with_policy(y_prob)
@@ -99,13 +103,16 @@ def plot_confusion_matrix(
             row = 2
         cm[row, col] += 1
 
+    if xticks is None:
+        xticks = ["Negative / Risk", "Positive / Stable"]
+
     plt.figure(figsize=(10, 7))
     sns.heatmap(
         cm,
         annot=True,
         fmt="d",
         cmap="Blues",
-        xticklabels=["Low Income", "High Income"],
+        xticklabels=xticks,
         yticklabels=["Reject", "Accept", "Abstain"],
     )
     plt.title(f"Policy Confusion Matrix (Low={tau_low}, High={tau_high})")

@@ -18,7 +18,9 @@ async def health():
     """
     Service health check. Does not raise 503.
     """
+    ready_engines = list(APIState._engines.keys())
     return {
         "status": "healthy",
-        "engine_ready": APIState._engine is not None and APIState._initialized,
+        "engines_loaded": ready_engines,
+        "is_initialized": APIState._initialized,
     }

@@ -1,17 +1,17 @@
-# 🦅 KAIROS: Production-Grade Risk Intelligence
+# 🦅 KAIROS: Multi-Engine Decision Intelligence
 
-## High-Availability Microservice for Scalable Decisioning & Statistical Trust
+## High-Availability Microservice for Tier-1 Banking Risk & Demographic Analytics
 
 ![Build Status](https://github.com/AbhijitMore/kairos/actions/workflows/ci.yml/badge.svg)
 [![Documentation](https://img.shields.io/badge/docs-Onboarding-brightgreen.svg)](docs/ONBOARDING.md)
 [![Development](https://img.shields.io/badge/docs-Development-yellow.svg)](docs/DEVELOPMENT.md)
 [![Architecture](https://img.shields.io/badge/architecture-System%20Design-blue.svg)](docs/ARCHITECTURE.md)
 [![API Spec](https://img.shields.io/badge/API-OpenAPI%203.0-orange.svg)](docs/openapi.yaml)
-[![Python](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 [![Code style: Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-![KAIROS Dashboard](docs/assets/dashboard.png)
+![KAIROS Multi-Dashboard](docs/assets/dashboard.png)
 
 ### 🚀 Business Impact
 
@@ -21,12 +21,15 @@
 
 ## 💎 Engineering Excellence (The FAANG Blueprint)
 
-### 1. Unified Feature Lifecycle & Reproducibility
+### 1. Multi-Domain Engine Support (Discriminated Unions)
 
-The leading cause of ML failure is **Training-Serving Skew**. KAIROS ensures **Bit-Perfect Parity** by using a unified `AdultFeatureEngineer`.
+KAIROS handles diverse data-contracts through a unified **Discriminated Union** architecture. It supports specialized decisioning for:
 
-- **Zero Skew**: The Inference API loads the _exact same_ serialised Scikit-Learn pipeline used during training.
-- **Auditable History**: Every experiment is logged via **MLflow**, tracking code version, data hashes, and metric curves for full auditability.
+- **🏦 Banking Risk (Home Credit)**: Advanced financial ratios, credit strength, and loan underwriting.
+- **📋 Census Analytics (UCI Adult)**: Demographic distributions and academic baseline benchmarking.
+
+- **Type-Safe Inference**: Pydantic v2 schemas ensure strict validation before data hits the model.
+- **Auditable History**: Every experiment is logged via **MLflow**, tracking code version, data hashes, and metric curves.
 
 ### 2. Statistical Calibration (Reliable Probabilities)
 
@@ -57,20 +60,22 @@ Designed as a **Stateless Microservice**, the KAIROS API is ready for high-scale
 
 ```mermaid
 graph TD
-    A[Raw Data] --> B[Unified Feature Pipeline]
+    Data[Raw Data: Banking/Census] --> B[Domain Transformers]
     B --> C[Optuna HPO & Trainer]
-    C --> D[MLflow Registry & Prometheus]
-    D --> E[Calibration Layer]
-    E --> F[Serialized Artifact]
+    C --> D[MLflow Model Registry]
+    D --> E[Isotonic Calibration]
+    E --> F[Serialized Engines]
 
-    F --> G[FastAPI Inference]
-    G --> H[Microservices Data Contract]
+    F --> G[FastAPI Multi-Engine]
+    G --> H[Discriminated Union Contract]
     H --> I{Precision Gate?}
-    I -- Pass --> J[Automated Decision]
-    I -- Fail --> K[Human-in-the-Loop]
+    I -- Pass --> J[Auto Decision]
+    I -- Fail --> K[Human Review]
 
-    G -->|Telemetry| P[Prometheus]
-    P -->|Visuals| Gr[Grafana Dashboard]
+    G -->|Metrics| P[Prometheus]
+    P -->|Alerts| AM[Alertmanager]
+    AM -->|SMTP| Mail[Gmail: abhimore822@gmail.com]
+    P -->|Visuals| Gr[Professional Dashboards]
 ```
 
 ### 🧬 Scientific Rigor & Benchmarks
@@ -81,22 +86,23 @@ Run the canonical evaluation suite to verify our **96% Precision** and **<0.02 E
 PYTHONPATH=. python src/kairos/evaluate.py
 ```
 
-| Metric                | Random Forest | **KAIROS Stack** | Rationale                                 |
-| :-------------------- | :-----------: | :--------------: | :---------------------------------------- |
-| **Precision**         |     78.3%     |    **96.1%**     | 18% lift via calibrated thresholding      |
-| **Automation Rate**   |     100%      |    **69.4%**     | Risk-averse filtering of borderline cases |
-| **Calibration (ECE)** |     0.12      |    **0.011**     | Isotonic Regression normalization         |
-| **Inference Skew**    |  Significant  |     **Zero**     | Unified Feature Engineering Pipeline      |
+| Domain           | Baseline Accuracy | **KAIROS Precision** | Rationale                                  |
+| :--------------- | :---------------: | :------------------: | :----------------------------------------- |
+| **Banking Risk** |       ~74%        |      **93.4%**       | +19% gain via calibrated loan underwriting |
+| **Census Data**  |       ~81%        |      **96.1%**       | High-precision demographic gates           |
+| **Drift Logic**  |       None        |     **Enforced**     | Auto-Alerting for >15% rejection spike     |
+| **Inference**    |     Ambiguous     |    **Type-Safe**     | Discriminated Union Schemas                |
 
 ---
 
-## 🛠 Operational Stack (Prometheus & Grafana)
-
-KAIROS integrates a complete **Observability Mesh**:
+KAIROS integrates a professional **Production Observability Suite**:
 
 1.  **Prometheus**: Scrapes latency and decision mix metrics every 5 seconds.
-2.  **Grafana**: Provides real-time visibility into model stability and outcome ratios.
-3.  **App Dashboard**: A high-utility UI for engineers to simulate "Shadow Predictions."
+2.  **Alertmanager**: Real-time notification pipeline with **Gmail SMTP** integration for Critical Alerts.
+3.  **Grafana Dashboards**:
+    - **Banking: Risk Strategy**: Tracking Underwriting load and Loss Prevention.
+    - **Census: Demographic Analytics**: Baseline model stability and trends.
+4.  **Integrated Dashboard**: High-fidelity frontend for simulation and case review.
 
 **Launch Command:**
 
@@ -119,12 +125,13 @@ KAIROS maintains a **production-ready logic gate** in its CI pipeline:
 
 ## 📂 Repository Structure
 
-- `app/`: Production API & Pydantic **Microservice Data Contracts**.
+- `src/kairos/api/`: Production FastAPI engines & **Discriminated Union** contracts.
+- `src/kairos/web/`: Real-time frontend dashboard and simulator.
 - `src/kairos/core/`: The "Brain" (Ensembles, Calibration, Policy).
-- `src/kairos/data/`: Transformers and unified feature engineering.
-- `frontend/`: Real-time Dashboard for decision visualization.
-- `docker/`: Infrastructure configuration (Prometheus, Dockerfiles).
+- `src/kairos/data/`: Domain-specific Transformers and loader logic.
+- `docker/`: Full-stack orchestration (Prometheus, Alertmanager, Grafana).
 - `docs/`: Technical deep-dives (Architecture, Onboarding, Research).
+- `tests/integration/`: Programmatic verification of decision logic & metrics.
 
 ---
 
@@ -139,9 +146,9 @@ Every production system is a balance of trade-offs. Here is how KAIROS sits toda
 
 ### **Future Roadmap (Staff-Level Expansion)**
 
-- [ ] **Automated Drift Detection**: Integration with Evidently.ai to trigger retraining alerts via Prometheus.
-- [ ] **Shadow Mode Strategy**: Implementing a "Proxy-Pass" layer to run new model versions in parallel with the Champion model.
-- [ ] **Kubernetes Helm Charts**: Standardizing deployment with HPA (Horizontal Pod Autoscaling) based on custom metrics (Decision Ratios).
+- [x] **Automated Drift detection**: Real-time alerting via Prometheus/Alertmanager for rejection spikes.
+- [ ] **Shadow Mode Strategy**: Implementing a "Proxy-Pass" layer to run new model versions in parallel.
+- [ ] **Kubernetes Helm Charts**: Standardizing deployment with HPA (Horizontal Pod Autoscaling).
 
 ---
 

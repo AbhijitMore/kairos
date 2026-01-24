@@ -23,20 +23,28 @@ celery_app.conf.update(
 _engine = None
 
 
-def get_engine():
-    global _engine
-    if _engine is None:
-        model_path = os.getenv("MODEL_PATH", "outputs/kairos_model")
-        _engine = KairosInferenceEngine.load(model_path)
-    return _engine
+def get_engine(dataset_name: str = "adult"):
+    """
+    Loads a specific engine for the worker.
+    Workers typically load models from the 'outputs' or 'models' directory.
+    """
+    # Look for the model in the standard outputs directory first
+    model_path = f"outputs/{dataset_name}_model"
+    if not os.path.exists(model_path):
+        # Fallback to a models/ directory or env var
+        model_path = os.getenv("MODEL_PATH", "outputs/adult_model")
+
+    return KairosInferenceEngine.load(model_path)
 
 
 @celery_app.task(name="kairos.predict_batch")
-def predict_batch_task(records: List[Dict[str, Any]]) -> Dict[str, Any]:
+def predict_batch_task(
+    records: List[Dict[str, Any]], dataset: str = "adult"
+) -> Dict[str, Any]:
     """
-    Background task to process a batch of records.
+    Background task to process a batch of records for a specific dataset.
     """
-    engine = get_engine()
+    engine = get_engine(dataset)
 
     # Convert list of dicts to DataFrame for batch inference efficiency
     df = pd.DataFrame(records)
@@ -44,11 +52,8 @@ def predict_batch_task(records: List[Dict[str, Any]]) -> Dict[str, Any]:
     # Run calibrated inference
     probs = engine.predict_calibrated(df)
 
-    # Standard KAIROS policy application (could be made configurable later)
-    # For now, we return probabilities and the user can apply policy or we can
-    # import KairosPolicy here.
-
     return {
+        "dataset": dataset,
         "predictions": probs.tolist(),
         "count": len(records),
         "processed_at": datetime.now(timezone.utc).isoformat(),

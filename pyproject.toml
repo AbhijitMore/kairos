@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kairos"
-version = "1.0.0"
+version = "2.3.0"
 description = "Production ML Risk Assessment System"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -71,7 +71,7 @@ ignore_missing_imports = true
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
-addopts = "--cov=src --cov=app --cov-report=term-missing -v"
+addopts = "--cov=src --cov-report=term-missing -v"
 markers = [
     "unit: Small, fast tests for individual functions and classes.",
     "integration: Tests for API endpoints and component interactions.",

@@ -92,3 +92,59 @@ class AdultFeatureEngineer(BaseEstimator, TransformerMixin):
                     X[col] = X[col].fillna("Unknown")
 
         return X
+
+
+class HomeCreditFeatureEngineer(BaseEstimator, TransformerMixin):
+    """
+    Custom transformer for the Home Credit dataset focusing on banking risk metrics.
+    """
+
+    def __init__(self):
+        pass
+
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        X = X.copy()
+
+        # 1. Financial Ratios
+        if "AMT_INCOME_TOTAL" in X.columns:
+            if "AMT_CREDIT" in X.columns:
+                X["CREDIT_INCOME_PERCENT"] = X["AMT_CREDIT"] / X["AMT_INCOME_TOTAL"]
+            if "AMT_ANNUITY" in X.columns:
+                X["ANNUITY_INCOME_PERCENT"] = X["AMT_ANNUITY"] / X["AMT_INCOME_TOTAL"]
+            if "AMT_GOODS_PRICE" in X.columns:
+                X["GOODS_PRICE_PERCENT"] = X["AMT_GOODS_PRICE"] / X["AMT_INCOME_TOTAL"]
+
+        # 2. Timing Features (Days to Years)
+        if "DAYS_BIRTH" in X.columns:
+            X["AGE_YEARS"] = X["DAYS_BIRTH"] / -365.0
+        if "DAYS_EMPLOYED" in X.columns:
+            X["EMPLOYMENT_YEARS"] = X["DAYS_EMPLOYED"] / -365.0
+
+        # 3. Aggregated Scores
+        score_cols = ["EXT_SOURCE_1", "EXT_SOURCE_2", "EXT_SOURCE_3"]
+        available_scores = [c for c in score_cols if c in X.columns]
+        if available_scores:
+            X["EXT_SOURCES_MEAN"] = X[available_scores].mean(axis=1)
+            X["EXT_SOURCES_PROD"] = X[available_scores].prod(axis=1)
+
+        # 4. Handle categorical
+        cat_cols = X.select_dtypes(include=["object"]).columns
+        for col in cat_cols:
+            X[col] = X[col].astype("category")
+
+        # Replace any potential NaNs or infs
+        numeric_cols = X.select_dtypes(include=[np.number]).columns
+        X[numeric_cols] = X[numeric_cols].replace([np.inf, -np.inf], 0).fillna(0)
+
+        # Categorical fillna
+        categorical_cols = X.select_dtypes(include=["category"]).columns
+        for col in categorical_cols:
+            if X[col].isna().any():
+                if "Unknown" not in X[col].cat.categories:
+                    X[col] = X[col].cat.add_categories(["Unknown"])
+                X[col] = X[col].fillna("Unknown")
+
+        return X

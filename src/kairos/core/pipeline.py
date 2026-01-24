@@ -4,7 +4,6 @@ from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder
 from sklearn.impute import SimpleImputer
 
-from kairos.data.transformers import AdultFeatureEngineer
 from kairos.core.models import HybridEnsemble
 
 from kairos.utils.logging import setup_kairos_logger
@@ -12,38 +11,69 @@ from kairos.utils.logging import setup_kairos_logger
 logger = setup_kairos_logger("kairos.core.pipeline")
 
 
-def create_kairos_pipeline(config):
+def create_kairos_pipeline(config, dataset_type: str = "adult"):
     """
     Factory function to create the unified KAIROS pipeline.
     """
-    # 1. Feature Engineering
-    feature_engineer = AdultFeatureEngineer()
+    # 1. Feature Engineering selection
+    if dataset_type == "adult":
+        from kairos.data.transformers import AdultFeatureEngineer
+
+        feature_engineer = AdultFeatureEngineer()
+        categorical_features = [
+            "workclass",
+            "marital_status",
+            "occupation",
+            "relationship",
+            "race",
+            "sex",
+            "native_country",
+        ]
+        numeric_features = [
+            "age",
+            "education_num",
+            "capital_gain",
+            "capital_loss",
+            "hours_per_week",
+            "capital_net",
+            "age_bin",
+            "hours_per_edu",
+            "age_edu",
+            "hrs_edu",
+            "cap_gain_tax",
+        ]
+    elif dataset_type == "home_credit":
+        from kairos.data.transformers import HomeCreditFeatureEngineer
+
+        feature_engineer = HomeCreditFeatureEngineer()
+        categorical_features = [
+            "NAME_EDUCATION_TYPE",
+            "NAME_INCOME_TYPE",
+            "OCCUPATION_TYPE",
+        ]
+        numeric_features = [
+            "AMT_INCOME_TOTAL",
+            "AMT_CREDIT",
+            "AMT_ANNUITY",
+            "AMT_GOODS_PRICE",
+            "REGION_RATING_CLIENT",
+            "DAYS_BIRTH",
+            "DAYS_EMPLOYED",
+            "EXT_SOURCE_1",
+            "EXT_SOURCE_2",
+            "EXT_SOURCE_3",
+            "CREDIT_INCOME_PERCENT",
+            "ANNUITY_INCOME_PERCENT",
+            "GOODS_PRICE_PERCENT",
+            "AGE_YEARS",
+            "EMPLOYMENT_YEARS",
+            "EXT_SOURCES_MEAN",
+            "EXT_SOURCES_PROD",
+        ]
+    else:
+        raise ValueError(f"Unsupported dataset_type: {dataset_type}")
 
     # 2. Preprocessing
-    # These names are now used to dynamically find columns in the ensemble
-    categorical_features = [
-        "workclass",
-        "marital_status",
-        "occupation",
-        "relationship",
-        "race",
-        "sex",
-        "native_country",
-    ]
-    numeric_features = [
-        "age",
-        "education_num",
-        "capital_gain",
-        "capital_loss",
-        "hours_per_week",
-        "capital_net",
-        "age_bin",
-        "hours_per_edu",
-        "age_edu",
-        "hrs_edu",
-        "cap_gain_tax",
-    ]
-
     numeric_transformer = Pipeline(
         steps=[
             ("imputer", SimpleImputer(strategy="median")),
@@ -71,7 +101,6 @@ def create_kairos_pipeline(config):
     )
 
     # 3. Ensemble Model
-    # Indices are now handled internally by HybridEnsemble using name/type detection
     ensemble = HybridEnsemble(
         lgb_params=config["model"]["lgbm_params"],
         cat_params=config["model"]["catboost_params"],

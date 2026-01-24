@@ -24,18 +24,18 @@ jobs:
 
       - name: Run All Tests (Unit + Integration + Chaos)
         run: |
-          export PYTHONPATH=$PYTHONPATH:.
-          pytest tests/unit/ tests/integration/ tests/chaos/ --cov=src --cov=app --cov-report=term-missing --cov-fail-under=75 --timeout=60
+          export PYTHONPATH=src
+          pytest tests/unit/ tests/integration/ tests/chaos/ --cov=src --cov-report=term-missing --cov-fail-under=75 --timeout=60
 
       - name: Run Evaluation Script
         run: |
-          export PYTHONPATH=$PYTHONPATH:.
+          export PYTHONPATH=src
           python src/kairos/evaluate.py
 
       - name: Security Scans
         run: |
           pip install bandit pip-audit
-          bandit -r src/ app/
+          bandit -r src/
           pip-audit
 
       - name: Create Release Notes

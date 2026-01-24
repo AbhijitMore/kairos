@@ -1,0 +1,88 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 10,
+      "title": "🏦 BANKING RISK: CORE DECISIONING",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 5, "w": 8, "x": 0, "y": 1 },
+      "id": 11,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"], "values": false }
+      },
+      "targets": [
+        { "expr": "sum(kairos_decisions_total{dataset=\"home_credit\"})", "refId": "A" }
+      ],
+      "title": "Total Loans Processed",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 5, "w": 8, "x": 8, "y": 1 },
+      "id": 12,
+      "options": {
+        "pieType": "donut",
+        "legend": { "displayMode": "list", "placement": "right" }
+      },
+      "targets": [
+        { "expr": "sum(kairos_decisions_total{dataset=\"home_credit\"}) by (decision)", "legendFormat": "{{decision}}", "refId": "A" }
+      ],
+      "title": "Decision Distribution (Risk Mix)",
+      "type": "piechart"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": { "defaults": { "unit": "percentunit" } },
+      "gridPos": { "h": 5, "w": 8, "x": 16, "y": 1 },
+      "id": 13,
+      "targets": [
+        { "expr": "sum(kairos_decisions_total{dataset=\"home_credit\", decision=\"ABSTAIN\"}) / sum(kairos_decisions_total{dataset=\"home_credit\"})", "legendFormat": "Underwriting Load%", "refId": "A" }
+      ],
+      "title": "Manual Underwriting Load",
+      "type": "stat"
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 6 },
+      "id": 20,
+      "title": "📈 BUSINESS PERFORMANCE & LATENCY",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 7 },
+      "id": 21,
+      "targets": [
+        { "expr": "sum(rate(kairos_decisions_total{dataset=\"home_credit\"}[5m])) by (decision)", "legendFormat": "{{decision}}", "refId": "A" }
+      ],
+      "title": "Approval/Reject Trends",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" } },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 7 },
+      "id": 22,
+      "targets": [
+        { "expr": "histogram_quantile(0.99, sum(rate(http_request_duration_seconds_bucket[5m])) by (le))", "legendFormat": "P99 Latency", "refId": "A" }
+      ],
+      "title": "Inference Latency (SLA)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["banking", "risk"],
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "BANKING: Risk Strategy & Decisioning",
+  "uid": "kairos_banking_v1"
+}

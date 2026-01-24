@@ -1,0 +1,66 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 10,
+      "title": "📋 CENSUS ANALYTICS: ACADEMIC BENCHMARK",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 5, "w": 12, "x": 0, "y": 1 },
+      "id": 11,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"], "values": false }
+      },
+      "targets": [
+        { "expr": "sum(kairos_decisions_total{dataset=\"adult\"})", "refId": "A" }
+      ],
+      "title": "Total Demographic Samples analyzed",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 5, "w": 12, "x": 12, "y": 1 },
+      "id": 12,
+      "options": {
+        "pieType": "donut",
+        "legend": { "displayMode": "list", "placement": "right" }
+      },
+      "targets": [
+        { "expr": "sum(kairos_decisions_total{dataset=\"adult\"}) by (decision)", "legendFormat": "{{decision}}", "refId": "A" }
+      ],
+      "title": "Income Bracket decisions (>50K vs <=50K)",
+      "type": "piechart"
+    },
+    {
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 6 },
+      "id": 20,
+      "title": "📊 MODEL PRECISION TRENDS",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "Prometheus" },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 7 },
+      "id": 21,
+      "targets": [
+        { "expr": "sum(rate(kairos_decisions_total{dataset=\"adult\"}[5m])) by (decision)", "legendFormat": "{{decision}}", "refId": "A" }
+      ],
+      "title": "Demographic Decision Trends",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": ["census", "academic"],
+  "time": { "from": "now-15m", "to": "now" },
+  "title": "CENSUS: Demographic Analytics",
+  "uid": "kairos_census_v1"
+}

@@ -15,18 +15,21 @@ graph TD
     Security -->|REST API| Backend[FastAPI Backend]
 
     subgraph "Backend Services"
-        Backend -->|Inference Cloud| Engine[KAIROS Inference Engine]
+        Backend -->|Dataset Selection| Orchestrator[Multi-Engine Orchestrator]
+        Orchestrator -->|Inference Cloud| Engine[KAIROS Engine Pool]
         Backend -->|Thresholds| Policy[Kairos Policy Engine]
     end
 
     subgraph "Data & Artifacts"
-        Engine -->|Loads| Artifacts[(Model Artifacts / Joblib)]
-        Engine -->|Uses| Pipeline[Feature Pipeline]
+        Engine -->|Loads| Artifacts[(Outputs / adult_model, home_credit_model)]
+        Engine -->|Uses| Pipeline[Unified Feature Pipeline]
     end
 
-    subgraph "Observability & Registry"
+    subgraph "Observability & Automation"
         Backend -->|Metrics| Prometheus[Prometheus]
-        Prometheus -->|Visuals| Grafana[Grafana Dashboard]
+        Prometheus -->|Visuals| Grafana[Professional Dashboards]
+        Prometheus -->|Rules| AM[Alertmanager]
+        AM -->|SMTP| Mail[Gmail Alerting]
         Engine -->|Logs| MLflow[MLflow Model Registry]
     end
 
@@ -48,8 +51,9 @@ graph TD
 ### B. FastAPI Backend
 
 - Acts as the orchestration layer.
-- **Lifespan Management:** Loads the ML engine into memory at startup.
-- **Sanitization:** Cleans data (handling `NaNs`, type enforcement) before passing to the engine.
+- **Lifespan Management:** Automatically discovers and loads all models in `outputs/` or `models/` at startup.
+- **Orchestration:** Routes requests to the correct inference engine based on the `dataset` parameter.
+- **Sanitization:** Cleans data (handling `NaNs`, type enforcement) dynamically for any dataset schema.
 
 ### C. KAIROS Inference Engine
 
@@ -66,10 +70,10 @@ graph TD
 
 ## 3. Data Flow (Prediction Cycle)
 
-1. **Ingestion:** API receives a batch of raw JSON instances.
-2. **Pre-processing:** `AdultInstance` schemas validate field types.
-3. **Pipeline Transformation:** Features are mapped to the high-dimensional vector space expected by the model.
-4. **Scoring:** The ensemble model performs probabilistic inference.
+1. **Ingestion:** API receives a batch of raw JSON instances with a `dataset` tag.
+2. **Pre-processing:** `Discriminated Union` schemas validate field types for the specific domain.
+3. **Pipeline Transformation:** A unified factory selects the correct engineering logic (Adult vs Home Credit).
+4. **Scoring:** The appropriate engine performs probabilistic inference.
 5. **Decisioning:** The policy engine maps probabilities to business outcomes.
 6. **Delivery:** JSON response returns the verdict, probability, uncertainty, and cost-risk index.
 
@@ -90,13 +94,24 @@ KAIROS achieves state-of-the-art predictive stability by utilizing a **Hybrid En
 The system is fully containerized using Docker, making it cloud-agnostic and reproducible.
 
 ```mermaid
-deployment
-    node "Docker Host" {
-        container "frontend:latest" as UI
-        container "backend:latest" as API
-        volume "model_artifacts" as VM
-    }
+graph TD
+    subgraph "Docker Production Mesh"
+        UI[KAIROS Dashboard]
+        API[Unified API Node]
+        Worker[Celery Worker Cluster]
+        Redis[(Redis Queue)]
+        ML[MLflow Lifecycle]
 
-    API -- mounts --> VM
-    UI -- talks to :8000 --> API
+        Prom[Prometheus]
+        AM[Alertmanager]
+        Grafana[Grafana UI]
+    end
+
+    UI --> API
+    API --> Redis
+    Worker --> Redis
+    API --> ML
+    Prom --> API
+    Prom --> AM
+    Grafana --> Prom
 ```

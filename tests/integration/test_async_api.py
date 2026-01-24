@@ -12,7 +12,9 @@ def test_predict_batch_async_endpoint(
     mock_task.id = "fake-task-id"
     mock_delay.return_value = mock_task
 
-    payload = {"instances": [sample_instance]}
+    tagged_instance = sample_instance.copy()
+    tagged_instance["dataset_type"] = "adult"
+    payload = {"dataset": "adult", "instances": [tagged_instance]}
     response = client.post(
         "/api/v1/predict/batch/async", json=payload, headers=auth_headers
     )

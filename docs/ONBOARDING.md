@@ -9,8 +9,7 @@ Welcome to the **KAIROS** project. This guide will help you set up your local de
 Ensure you have the following installed on your host machine:
 
 - **Docker & Docker Compose** (version 24.0.0 or higher recommended)
-- **Python 3.10+** (if running backend services outside Docker)
-- **Node.js 18+ & npm** (if running frontend outside Docker)
+- **Python 3.11+** (if running backend services outside Docker)
 - **Git**
 
 ---
@@ -28,9 +27,10 @@ cd kairos
 docker compose up --build
 ```
 
-- **Frontend:** http://localhost:5000
-- **Backend API:** http://localhost:8000
-- **API Docs (Swagger):** http://localhost:8000/docs
+- **Frontend:** http://localhost:5001
+- **Backend API:** http://localhost:8001
+- **API Docs (Swagger):** http://localhost:8001/docs
+- **Observability (Grafana):** http://localhost:3000
 
 ---
 
@@ -42,15 +42,15 @@ If you are developing features for the ML pipeline or the API, you can run the b
 
 ```bash
 # Set up virtual environment
-python -m venv venv
-source venv/bin/activate
+python -m venv .venv
+source .venv/bin/activate
 
 # Install dependencies
 pip install -r requirements.txt
 
 # Run the API with hot-reload
-export PYTHONPATH=$PYTHONPATH:.
-uvicorn app.main:app --reload --port 8000
+export PYTHONPATH=src
+uvicorn kairos.api.main:app --reload --port 8001
 ```
 
 ### Frontend (React/Vanilla JS)
@@ -58,9 +58,9 @@ uvicorn app.main:app --reload --port 8000
 For UI changes, navigate to the frontend directory:
 
 ```bash
-cd frontend
-npm install
-npm run dev
+# Run the Dashboard locally
+export PYTHONPATH=src
+python src/kairos/web/app.py
 ```
 
 ---
