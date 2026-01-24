@@ -10,7 +10,7 @@ from kairos.core.policy import KairosPolicy
 from kairos.core.calibration import compute_ece
 
 
-def evaluate(model_path: str = "outputs/kairos_model", regression_gate: bool = True):
+def evaluate(model_path: str = "outputs/adult_model", regression_gate: bool = True):
     print("🦅 KAIROS Evaluation Protocol")
     print(f"Loading model from: {model_path}")
 
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="KAIROS Canonical Evaluation")
     parser.add_argument(
         "--model-path",
-        default="outputs/kairos_model",
+        default="outputs/adult_model",
         help="Path to serialized artifacts",
     )
     parser.add_argument(

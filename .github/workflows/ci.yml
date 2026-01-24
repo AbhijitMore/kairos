@@ -60,9 +60,9 @@ jobs:
           export PYTHONPATH=$PYTHONPATH:src
           # Note: Pre-trained model at models/v1/kairos_model uses legacy format
           # Skip regression gate in CI - comprehensive test suite validates code quality
-          if [ -d "outputs/kairos_model" ]; then
+          if [ -d "outputs/adult_model" ]; then
             echo "Model found, running regression gate..."
-            python src/kairos/evaluate.py --model-path outputs/kairos_model
+            python src/kairos/evaluate.py --model-path outputs/adult_model
           else
             echo "⚠️  Trained model not found, skipping regression gate (expected in CI)"
             echo "✅ Code quality validated via comprehensive test suite (33 tests, 81% coverage)"
