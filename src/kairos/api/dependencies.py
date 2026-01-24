@@ -52,6 +52,13 @@ class APIState:
             raise HTTPException(status_code=503, detail="Service not ready.")
         return cls._engine, cls._policy
 
+    @classmethod
+    def reset(cls):
+        """Resets the singleton state. Primarily for testing."""
+        cls._engine = None
+        cls._policy = None
+        cls._initialized = False
+
 
 # Dependencies
 async def get_api_key(api_key: str = Security(api_key_header)):

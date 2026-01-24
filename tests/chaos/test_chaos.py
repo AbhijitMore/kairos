@@ -40,21 +40,27 @@ class TestChaosScenarios:
         """
         Chaos: Model fails to load on startup.
         """
-        # Reset global state for isolation and ensure it stays reset during the test
-        with patch.object(APIState, "_engine", None), patch.object(
-            APIState, "_initialized", False
-        ), patch(
-            "kairos.core.models.HybridEnsemble.load",
-            side_effect=FileNotFoundError("Model not found"),
-        ), patch("kairos.core.pipeline.KairosInferenceEngine.load") as mock_load:
-            mock_load.side_effect = FileNotFoundError("Model not found")
+        # Reset global state for isolation
+        APIState.reset()
 
-            # Use a fresh client that triggers startup inside the patch
-            with TestClient(app, raise_server_exceptions=False) as client:
-                response = client.get("/health")
-                assert response.status_code == 200
-                data = response.json()
-                assert data["engine_ready"] is False
+        try:
+            with patch(
+                "kairos.core.models.HybridEnsemble.load"
+            ) as mock_ensemble_load, patch(
+                "kairos.api.dependencies.KairosInferenceEngine.load"
+            ) as mock_engine_load:
+                mock_ensemble_load.side_effect = FileNotFoundError("Model not found")
+                mock_engine_load.side_effect = FileNotFoundError("Model not found")
+
+                # Use a fresh client that triggers startup inside the patch
+                with TestClient(app, raise_server_exceptions=False) as client:
+                    response = client.get("/health")
+                    assert response.status_code == 200
+                    data = response.json()
+                    assert data["engine_ready"] is False
+        finally:
+            # Restore state for other tests if possible, or just reset
+            APIState.reset()
 
     def test_redis_connection_failure(self, client, api_key):
         """
