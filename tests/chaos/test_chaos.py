@@ -40,29 +40,21 @@ class TestChaosScenarios:
         """
         Chaos: Model fails to load on startup.
         """
-        # We need a fresh app/state for this test to ensure initialize() is called
-        # Reset global state for isolation
-        old_engine = APIState._engine
-        old_initialized = APIState._initialized
-        APIState._engine = None
-        APIState._initialized = False
+        # Reset global state for isolation and ensure it stays reset during the test
+        with patch.object(APIState, "_engine", None), patch.object(
+            APIState, "_initialized", False
+        ), patch(
+            "kairos.core.models.HybridEnsemble.load",
+            side_effect=FileNotFoundError("Model not found"),
+        ), patch("kairos.core.pipeline.KairosInferenceEngine.load") as mock_load:
+            mock_load.side_effect = FileNotFoundError("Model not found")
 
-        try:
-            with patch(
-                "kairos.api.dependencies.KairosInferenceEngine.load"
-            ) as mock_load:
-                mock_load.side_effect = FileNotFoundError("Model not found")
-
-                # Use a fresh client that triggers startup inside the patch
-                with TestClient(app, raise_server_exceptions=False) as client:
-                    response = client.get("/health")
-                    assert response.status_code == 200
-                    data = response.json()
-                    assert data["engine_ready"] is False
-        finally:
-            # Restore state for other tests
-            APIState._engine = old_engine
-            APIState._initialized = old_initialized
+            # Use a fresh client that triggers startup inside the patch
+            with TestClient(app, raise_server_exceptions=False) as client:
+                response = client.get("/health")
+                assert response.status_code == 200
+                data = response.json()
+                assert data["engine_ready"] is False
 
     def test_redis_connection_failure(self, client, api_key):
         """
