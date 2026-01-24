@@ -40,7 +40,7 @@ class TestChaosScenarios:
         Chaos: Model fails to load on startup.
         """
         # We need a fresh app/state for this test to ensure initialize() is called
-        with patch("app.dependencies.KairosInferenceEngine.load") as mock_load:
+        with patch("kairos.api.dependencies.KairosInferenceEngine.load") as mock_load:
             mock_load.side_effect = FileNotFoundError("Model not found")
 
             # Use a fresh client that triggers startup inside the patch
@@ -74,7 +74,9 @@ class TestChaosScenarios:
             ]
         }
 
-        with patch("app.routers.prediction.predict_batch_task.delay") as mock_celery:
+        with patch(
+            "kairos.api.routers.prediction.predict_batch_task.delay"
+        ) as mock_celery:
             mock_celery.side_effect = ConnectionError("Redis unavailable")
 
             response = client.post(
@@ -110,7 +112,7 @@ class TestChaosScenarios:
             ]
         }
 
-        with patch("app.routers.prediction.get_inference_deps") as mock_deps:
+        with patch("kairos.api.routers.prediction.get_inference_deps") as mock_deps:
             # Simulate slow inference
             def slow_deps(*args, **kwargs):
                 mock_engine = MagicMock()
