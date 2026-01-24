@@ -19,6 +19,7 @@ import time
 import os
 from unittest.mock import patch, MagicMock
 from kairos.api.main import app
+from kairos.api.dependencies import APIState
 from fastapi.testclient import TestClient
 
 
@@ -40,15 +41,28 @@ class TestChaosScenarios:
         Chaos: Model fails to load on startup.
         """
         # We need a fresh app/state for this test to ensure initialize() is called
-        with patch("kairos.api.dependencies.KairosInferenceEngine.load") as mock_load:
-            mock_load.side_effect = FileNotFoundError("Model not found")
+        # Reset global state for isolation
+        old_engine = APIState._engine
+        old_initialized = APIState._initialized
+        APIState._engine = None
+        APIState._initialized = False
 
-            # Use a fresh client that triggers startup inside the patch
-            with TestClient(app, raise_server_exceptions=False) as client:
-                response = client.get("/health")
-                assert response.status_code == 200
-                data = response.json()
-                assert data["engine_ready"] is False
+        try:
+            with patch(
+                "kairos.api.dependencies.KairosInferenceEngine.load"
+            ) as mock_load:
+                mock_load.side_effect = FileNotFoundError("Model not found")
+
+                # Use a fresh client that triggers startup inside the patch
+                with TestClient(app, raise_server_exceptions=False) as client:
+                    response = client.get("/health")
+                    assert response.status_code == 200
+                    data = response.json()
+                    assert data["engine_ready"] is False
+        finally:
+            # Restore state for other tests
+            APIState._engine = old_engine
+            APIState._initialized = old_initialized
 
     def test_redis_connection_failure(self, client, api_key):
         """
