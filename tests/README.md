@@ -155,7 +155,7 @@ pytest tests/e2e/test_ui.py::TestKairosDashboard::test_submit_prediction_success
 rm -f .coverage
 
 # Re-run tests
-pytest --cov=src --cov=app tests/
+pytest --cov=src tests/
 ```
 
 ### Load Test: API Not Responding
@@ -198,7 +198,7 @@ The test suite is integrated into `.github/workflows/ci.yml`:
 
 ```yaml
 - name: Run Unit & Integration Tests
-  run: pytest --cov=src --cov=app --cov-fail-under=75 tests/unit/ tests/integration/
+  run: pytest --cov=src --cov-fail-under=75 tests/unit/ tests/integration/
 
 - name: Run Chaos Tests
   run: pytest tests/chaos/ --timeout=30
@@ -312,7 +312,7 @@ pytest --count=3 tests/unit/test_policy.py
 
 ```bash
 # Generate HTML report
-pytest --cov=src --cov=app --cov-report=html tests/
+pytest --cov=src --cov-report=html tests/
 
 # Open in browser
 open htmlcov/index.html
