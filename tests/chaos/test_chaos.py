@@ -41,7 +41,8 @@ class TestChaosScenarios:
         Chaos: Model fails to load on startup.
         """
         # Reset global state for isolation
-        APIState.reset()
+        APIState._engines = {}
+        APIState._initialized = False
 
         try:
             with patch(
@@ -57,10 +58,11 @@ class TestChaosScenarios:
                     response = client.get("/health")
                     assert response.status_code == 200
                     data = response.json()
-                    assert data["engine_ready"] is False
+                    assert len(data["engines_loaded"]) == 0
         finally:
             # Restore state for other tests if possible, or just reset
-            APIState.reset()
+            APIState._engines = {}
+            APIState._initialized = False
 
     def test_redis_connection_failure(self, client, api_key):
         """
@@ -68,8 +70,10 @@ class TestChaosScenarios:
         Expected: Async endpoints fail gracefully.
         """
         payload = {
+            "dataset": "adult",
             "instances": [
                 {
+                    "dataset_type": "adult",
                     "age": 39,
                     "workclass": "State-gov",
                     "marital_status": "Never-married",
@@ -83,7 +87,7 @@ class TestChaosScenarios:
                     "native_country": "United-States",
                     "education_num": 13,
                 }
-            ]
+            ],
         }
 
         with patch(
@@ -106,8 +110,10 @@ class TestChaosScenarios:
         Expected: Request times out gracefully.
         """
         payload = {
+            "dataset": "adult",
             "instances": [
                 {
+                    "dataset_type": "adult",
                     "age": 39,
                     "workclass": "State-gov",
                     "marital_status": "Never-married",
@@ -121,10 +127,10 @@ class TestChaosScenarios:
                     "native_country": "United-States",
                     "education_num": 13,
                 }
-            ]
+            ],
         }
 
-        with patch("kairos.api.routers.prediction.get_inference_deps") as mock_deps:
+        with patch("kairos.api.dependencies.APIState.get_engine") as mock_get_engine:
             # Simulate slow inference
             def slow_deps(*args, **kwargs):
                 mock_engine = MagicMock()
@@ -133,7 +139,7 @@ class TestChaosScenarios:
                 ]
                 return mock_engine, MagicMock()
 
-            mock_deps.side_effect = slow_deps
+            mock_get_engine.side_effect = slow_deps
 
             # This should timeout or return quickly with error
             start = time.time()
@@ -178,8 +184,10 @@ class TestChaosScenarios:
         Expected: 429 Too Many Requests after threshold.
         """
         payload = {
+            "dataset": "adult",
             "instances": [
                 {
+                    "dataset_type": "adult",
                     "age": 39,
                     "workclass": "State-gov",
                     "marital_status": "Never-married",
@@ -193,7 +201,7 @@ class TestChaosScenarios:
                     "native_country": "United-States",
                     "education_num": 13,
                 }
-            ]
+            ],
         }
 
         # Hammer the endpoint
@@ -217,8 +225,10 @@ class TestChaosScenarios:
         import concurrent.futures
 
         payload = {
+            "dataset": "adult",
             "instances": [
                 {
+                    "dataset_type": "adult",
                     "age": 39,
                     "workclass": "State-gov",
                     "marital_status": "Never-married",
@@ -232,7 +242,7 @@ class TestChaosScenarios:
                     "native_country": "United-States",
                     "education_num": 13,
                 }
-            ]
+            ],
         }
 
         def make_request():
@@ -260,8 +270,10 @@ class TestChaosScenarios:
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
 
         payload = {
+            "dataset": "adult",
             "instances": [
                 {
+                    "dataset_type": "adult",
                     "age": 39,
                     "workclass": "State-gov",
                     "marital_status": "Never-married",
@@ -275,7 +287,7 @@ class TestChaosScenarios:
                     "native_country": "United-States",
                     "education_num": 13,
                 }
-            ]
+            ],
         }
 
         # Make 100 requests (reduced for faster test execution since it's chaos)
@@ -296,8 +308,10 @@ class TestChaosScenarios:
         Expected: 403 Forbidden.
         """
         payload = {
+            "dataset": "adult",
             "instances": [
                 {
+                    "dataset_type": "adult",
                     "age": 39,
                     "workclass": "State-gov",
                     "marital_status": "Never-married",
@@ -311,7 +325,7 @@ class TestChaosScenarios:
                     "native_country": "United-States",
                     "education_num": 13,
                 }
-            ]
+            ],
         }
 
         # No API key

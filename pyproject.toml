@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kairos"
-version = "2.3.0"
+version = "2.3.1"
 description = "Production ML Risk Assessment System"
 readme = "README.md"
 requires-python = ">=3.12"
